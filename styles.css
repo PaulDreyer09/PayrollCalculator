@@ -42,21 +42,18 @@ body *{
     font-size: 1.2em;
 
     border:dodgerblue solid 2px;
-    color: dodgerblue;
+    color: white;
+    background-color: rgba(30, 143, 255, 0.753);
 
     cursor: pointer;    
 }
 
 #tax-form input[type="submit"]:hover {
-    background-color: dodgerblue;
+    transition: all 0.2s;
+    background-color: rgb(30, 143, 255);
     border-color: white;
     color: white;
 
-}
-
-#calculation-results{
-    display: flex;
-    flex-direction: column;
 }
 
 #calculation-results .result{
@@ -65,4 +62,9 @@ body *{
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #aaa;
+}
+
+#calculation-results .result p{
+    height: 1.5em;
+    line-height: 1.5em;
 }

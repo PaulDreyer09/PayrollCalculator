@@ -140,7 +140,6 @@ const displayCalculationResults = (result) => {
  * @returns {number} - The calculated total based on the tiered structure and the input value.
  */
 const calculateFromTieredStructure = (tiers, inputValue, calculationFunction) => {
-    console.log(inputValue)
     let total = 0;
 
     for(let i = 0; i < tiers.length; i++) {
