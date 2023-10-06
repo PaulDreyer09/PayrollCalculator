@@ -1,0 +1,68 @@
+body *{
+    box-sizing: border-box;
+    font-family: Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    border-radius: 10px;
+    padding: 30px 15px;
+    border: solid 1px #bbb;
+    background-color: #ebebeb;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+.form-control{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 5px;
+}
+
+.form-control input, .form-control select{
+    height: 2.5em;
+    width: 200px;
+    border-radius: 3px;
+    border: solid 1px #bbb;
+    padding: 0 1em;
+}
+
+#tax-form{
+    display: flex;
+    flex-direction: column;
+}
+
+#tax-form input[type="submit"]{
+    padding: 10px 20px;
+    margin-top: 30px;
+    border-radius: 10px;
+
+    font-size: 1.2em;
+
+    border:dodgerblue solid 2px;
+    color: dodgerblue;
+
+    cursor: pointer;    
+}
+
+#tax-form input[type="submit"]:hover {
+    background-color: dodgerblue;
+    border-color: white;
+    color: white;
+
+}
+
+#calculation-results{
+    display: flex;
+    flex-direction: column;
+}
+
+#calculation-results .result{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #aaa;
+}

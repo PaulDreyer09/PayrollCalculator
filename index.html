@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">        
+        <h1>Payroll Tax Calculator</h1>
+        <form id="tax-form">
+            <div class="form-control">
+                <label for="age">Age</label>
+                <input type="number" name="age" id="age-input", min="0", value="0">
+            </div>
+            <div class="form-control">
+                <label for="salary">Salary</label>
+                <input type="number" name="salary" id="salary-input", min="0", value="0">
+            </div>
+            <div class="form-control">
+                <label for="period">Period</label>
+                <select name="period" id="period-select"></select>
+            </div>
+            <input type="submit" id="submit-button"/>
+        </form>
+        <div id="calculation-results" hidden="false">
+            <div class="result">
+                <label for="paye-result">PAYE: </label>
+                <p id="paye-result"></p>
+            </div>
+            <div class="result">
+                <label for="uif-result">UIF: </label>
+                <p id="uif-result"></p>
+            </div>
+            <div class="result">
+                <label for="salary-result">Net Salary: </label>
+                <p id="salary-result"></p>
+            </div>
+            
+
+        </div>
+    </div>
+
+    <script type="text/javascript" src="script.js"></script>
+</body>
+</html>
