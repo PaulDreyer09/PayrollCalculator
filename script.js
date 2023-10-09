@@ -80,17 +80,6 @@ const uifOptions = {
 }
 
 /**
- * Clear all option elements from a given select element
- * 
- * @param {Element} selectElement :select element to remove options from
- */
-const deleteAllSelectOptions = (selectElement) => {
-    while (selectElement.firstChild) {
-        selectElement.removeChild(selectElement.firstChild);
-      }
-}
-
-/**
  * Populates a select element with the given options.
  *      Each option text will be the key, and the value will be the value of each item in options array.
  * @param {{text: string, value: any}} options :object filled with text and value of the option
@@ -100,7 +89,9 @@ const deleteAllSelectOptions = (selectElement) => {
  */
 const initializeSelect = (options, selectElement) => {
     //Clear any options from the select element
-    deleteAllSelectOptions(selectElement)
+    while (selectElement.firstChild) {
+        selectElement.removeChild(selectElement.firstChild);
+    }
 
     //Create and add option elements according to the options object
     for (let i = 0; i < options.length; i++) {
