@@ -1,12 +1,14 @@
 // Cache DOM selectors
 const taxForm = document.querySelector("#tax-form");
 const periodSelect = document.querySelector("#period-select");
-const resultsContainer = document.querySelector('#calculation-results');
-const payeResultDisplay = document.querySelector('#paye-result');
-const uifResultDisplay = document.querySelector('#uif-result');
-const salaryResultDisplay = document.querySelector('#salary-result');
+const resultsContainer = document.querySelector("#calculation-results");
+const payeResultDisplay = document.querySelector("#paye-result");
+const uifResultDisplay = document.querySelector("#uif-result");
+const salaryResultDisplay = document.querySelector("#salary-result");
 
 // Configuration data
+const currencyCharacter = "R";
+
 const periodOptions = [
     {
         text: "Weekly",
@@ -98,8 +100,8 @@ const initializeSelect = (options, selectElement) => {
 /**
  * Calculates the monthly payable UIF based on a monthly salary
  * 
- * @param {number} monthlyIncome | value of monthly income
- * @param {{percentage: number, ceiling: number}} options | options for calculating the UIF
+ * @param {number} monthlyIncome - value of monthly income
+ * @param {{percentage: number, ceiling: number}} options - options for calculating the UIF
  *      percentage: Percentage of the total income which will be calculated as UIF
  *      ceiling: Maximum value which can be calculated from monthlyIncome to UIF
  */
@@ -121,10 +123,9 @@ const calculateMonthlyUIF = (monthlyIncome, options) => {
  *      netSalary: Salary after deductions for the period 
  */
 const displayCalculationResults = (result) => {
-    payeResultDisplay.textContent = result.paye.toFixed(2);    
-    uifResultDisplay.textContent = result.uif.toFixed(2);
-    salaryResultDisplay.textContent = result.netSalary.toFixed(2);
-    resultsContainer.removeAttribute('hidden');
+    payeResultDisplay.textContent = `${currencyCharacter} ${result.paye.toFixed(2)}`;    
+    uifResultDisplay.textContent = `${currencyCharacter} ${result.uif.toFixed(2)}`;
+    salaryResultDisplay.textContent = `${currencyCharacter} ${result.netSalary.toFixed(2)}`;
 }
 
 /**
@@ -207,17 +208,15 @@ const calculateTaxData = (employeeAge, grossSalary, periods) => {
     // Calculate annual income
     let annualIncome = grossSalary * periods;
 
-    // Calculate DE Annualized UIF
+    // Calculate DE-Annualized UIF
     let monthlyIncome = annualIncome / 12;
     let monthlyUIF = calculateMonthlyUIF(monthlyIncome, uifOptions);
     let deAnnualizedUIF = monthlyUIF * 12 / periods;
 
     // Calculate Tax Rebates
-    //let taxRebates = calculateTotalFromTieredStructure(taxRebatesAgeBrackets, employeeAge);
     let taxRebates = calculateFromTieredStructure(taxRebatesAgeBrackets, employeeAge, calculateAddedTotal);
 
     // Calculate PAYE
-    //let rawPaye = calculateProgressiveTaxation(annualIncome, taxBrackets);
     let rawPaye = calculateFromTieredStructure(taxBrackets, annualIncome, calculateTaxTotal);
 
     let annualPaye = rawPaye > taxRebates ? rawPaye - taxRebates : 0;
@@ -247,9 +246,9 @@ const onSubmit = (event) => {
     // Get form data
     const formData = event.target;
 
-    const employeeAge = formData.elements['age'].value;
-    const grossSalary = formData.elements['salary'].value;
-    const periods = formData.elements['period'].value;
+    const employeeAge = formData.elements["age"].value;
+    const grossSalary = formData.elements["salary"].value;
+    const periods = formData.elements["period"].value;
 
     let data = calculateTaxData(employeeAge, grossSalary, periods);
 
