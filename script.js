@@ -80,12 +80,29 @@ const uifOptions = {
 }
 
 /**
+ * Clear all option elements from a given select element
+ * 
+ * @param {Element} selectElement :select element to remove options from
+ */
+const deleteAllSelectOptions = (selectElement) => {
+    while (selectElement.firstChild) {
+        selectElement.removeChild(selectElement.firstChild);
+      }
+}
+
+/**
  * Populates a select element with the given options.
  *      Each option text will be the key, and the value will be the value of each item in options array.
- * @param {object} options :object filled with key/value pairs: {"key": value}
+ * @param {{text: string, value: any}} options :object filled with text and value of the option
+ *      text: Text value of the option
+ *      value: Value of the option
  * @param {Element} selectElement :select element to populate with options
  */
 const initializeSelect = (options, selectElement) => {
+    //Clear any options from the select element
+    deleteAllSelectOptions(selectElement)
+
+    //Create and add option elements according to the options object
     for (let i = 0; i < options.length; i++) {
         const { text, value } = options[i];
 
@@ -196,6 +213,7 @@ const calculateAddedTotal = (total, tier) => {
 
 /**
  * Calculates the PAYE after deductions, the UIF for the period and Net Salary for the period
+ * 
  * @param {number} employeeAge - Age of the employee
  * @param {number} grossSalary - Employee gross salary
  * @param {number} periods - Amount of periods within a year such as 52 weeks per year
