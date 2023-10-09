@@ -86,7 +86,7 @@ const uifOptions = {
  * @param {Element} selectElement :select element to populate with options
  */
 const initializeSelect = (options, selectElement) => {
-    for(let i = 0; i < options.length; i++) {
+    for (let i = 0; i < options.length; i++) {
         const { text, value } = options[i];
 
         const periodOption = document.createElement("option");
@@ -122,10 +122,10 @@ const calculateMonthlyUIF = (monthlyIncome, options) => {
  *      uif: UIF for the period | 
  *      netSalary: Salary after deductions for the period 
  */
-const displayCalculationResults = (result) => {
-    payeResultDisplay.textContent = `${currencyCharacter} ${result.paye.toFixed(2)}`;    
-    uifResultDisplay.textContent = `${currencyCharacter} ${result.uif.toFixed(2)}`;
-    salaryResultDisplay.textContent = `${currencyCharacter} ${result.netSalary.toFixed(2)}`;
+const displayCalculationResults = (paye, uif, netSalary) => {
+    payeResultDisplay.textContent = `${currencyCharacter} ${paye.toFixed(2)}`;
+    uifResultDisplay.textContent = `${currencyCharacter} ${uif.toFixed(2)}`;
+    salaryResultDisplay.textContent = `${currencyCharacter} ${netSalary.toFixed(2)}`;
 }
 
 /**
@@ -143,13 +143,13 @@ const displayCalculationResults = (result) => {
 const calculateFromTieredStructure = (tiers, inputValue, calculationFunction) => {
     let total = 0;
 
-    for(let i = 0; i < tiers.length; i++) {
+    for (let i = 0; i < tiers.length; i++) {
         const currentTier = tiers[i];
         const previousTier = tiers[i - 1];
 
         const minValue = i > 0 ? previousTier.max : 0;
-        
-        if(inputValue >= minValue){            
+
+        if (inputValue >= minValue) {
             total = calculationFunction(total, currentTier, minValue, inputValue);
         }
     }
@@ -169,7 +169,7 @@ const calculateFromTieredStructure = (tiers, inputValue, calculationFunction) =>
  * @returns {number} - The updated total based on the current tier calculation.
  */
 const calculateTaxTotal = (total, currentTier, minValue, inputValue) => {
-    const {max, rate} = currentTier;
+    const { max, rate } = currentTier;
 
     let amountLeftToTax = Math.max(inputValue - minValue, 0);
     let maxTaxableAmount = max !== Infinity ? max - minValue : amountLeftToTax;
@@ -250,9 +250,9 @@ const onSubmit = (event) => {
     const grossSalary = formData.elements["salary"].value;
     const periods = formData.elements["period"].value;
 
-    let data = calculateTaxData(employeeAge, grossSalary, periods);
+    let {paye, uif, netSalary} = calculateTaxData(employeeAge, grossSalary, periods);
 
-    displayCalculationResults(data);
+    displayCalculationResults(paye, uif, netSalary);
 }
 
 // Initialize Period Select with options
@@ -272,39 +272,34 @@ taxForm.addEventListener("submit", onSubmit);
 //  *     rate: tax rate for the bracket
 //  * @returns {number} - The calculated total tax amount based on the progressive tax taxBrackets for the given income.
 //  */
-// const calculateProgressiveTaxation = (incomeValue, taxBrackets) => {
-//     let result = 0;
-//     let currentTaxableAmount = 0;
-//     let amountLeftToTax = incomeValue;
+// const calculateProgressiveTaxation = (taxBrackets,incomeValue) => {
+//     let total = 0;
 
-//     for (let i = 0; i < taxBrackets.length; i++) {
-//         const option = taxBrackets[i];
-//         const { max, rate } = option;
-    
-//         // Calculate the amount left to tax in the current bracket
-//         amountLeftToTax -= currentTaxableAmount;
-    
-//         // Calculate the minimum value for the current bracket
-//         const previousOption = taxBrackets[i - 1];
-//         let min = previousOption ? previousOption.max : 0;
-    
-//         // Calculate the maximum taxable amount in the current bracket
-//         let maxTaxableAmount = max !== Infinity ? max - min : amountLeftToTax;
-    
-//         // Calculate the taxable amount based on the current bracket
-//         currentTaxableAmount = Math.min(maxTaxableAmount, amountLeftToTax);
-    
-//         // Calculate tax from the current bracket and add it to the result
-//         let taxFromCurrentBracket = currentTaxableAmount * rate / 100;
-//         result += taxFromCurrentBracket;
+//     for (let i = 0; i < taxBrackets.length; i++) {        
+//         const currentTier = taxBrackets[i];
+//         const previousTier = taxBrackets[i - 1];
+
+//         const minValue = i > 0 ? previousTier.max : 0;
+
+//         if (incomeValue >= minValue) {
+//             const { max, rate } = currentTier;
+
+//             let amountLeftToTax = Math.max(incomeValue - minValue, 0);
+//             let maxTaxableAmount = max !== Infinity ? max - minValue : amountLeftToTax;
+//             let currentTaxableAmount = Math.min(maxTaxableAmount, amountLeftToTax);
+
+//             let taxFromCurrentBracket = currentTaxableAmount * rate / 100;
+//             total += taxFromCurrentBracket;
+            
+//         }
 //     }
 
-//     return result;
+//     return total;
 // }
 
 // /**
 //  * Calculate the combined total value based on a tiered structure.
-//  * 
+//  *
 //  * @param {Array<{max: number, value: number}>} tiers - An array of tier objects
 //  *      max: exclusive maximum value for the tier |
 //  *      value: the value to add to the total if the input value falls within this tier |
