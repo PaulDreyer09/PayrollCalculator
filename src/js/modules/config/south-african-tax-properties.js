@@ -1,24 +1,3 @@
-export const currencyCharacter = "R";
-
-export const periodOptions = [
-    {
-        text: "Weekly",
-        value: 52
-    },
-    {
-        text: "Every 2 Weeks",
-        value: 26
-    },
-    {
-        text: "Monthly",
-        value: 12
-    },
-    {
-        text: "Yearly",
-        value: 1
-    }
-];
-
 export const taxRebatesBrackets = [
     {
         max: 65,
