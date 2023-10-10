@@ -9,6 +9,7 @@ body *{
     max-width: 400px;
     border-radius: 10px;
     padding: 30px 15px;
+    margin: 20px auto;
     border: solid 1px #bbb;
     background-color: #ebebeb;
     box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.2);
@@ -37,7 +38,7 @@ body *{
 #tax-form input[type="submit"]{
     padding: 10px 20px;
     margin-top: 30px;
-    border-radius: 10px;
+    border-radius: 5px;
 
     font-size: 1.2em;
 
@@ -51,7 +52,7 @@ body *{
 
 #tax-form input[type="submit"]:hover {    
     background-color: rgb(30, 143, 255);
-    border-color: white;
+    border-color: #ebebeb;
     color: white;
 }
 
