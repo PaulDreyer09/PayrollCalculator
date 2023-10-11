@@ -1,5 +1,5 @@
 import { taxRebatesBrackets, taxBrackets, uifOptions } from '../config/south-african-tax-properties.js'
-import { calculateFromTieredStructure, calculateLimitedTaxation, flooredDifference, annualize, deAnnualize } from './calculation-functions.js'
+import { calculateFromTieredStructure, calculateLimitedTaxation, flooredDifference, annualize, deAnnualize, sum, subtract } from './calculation-functions.js'
 
 //Move to global module
 /**
@@ -12,7 +12,7 @@ import { calculateFromTieredStructure, calculateLimitedTaxation, flooredDifferen
  * @returns {number} - The updated total by adding the value from the current tier.
  */
 const calculateAddedTotal = (total, currentTier) => {
-    return total + currentTier.value;
+    return sum(total, currentTier.value);
 };
 
 /**
@@ -30,21 +30,11 @@ const calculateTaxTotal = (total, currentTier, minValue, inputValue) => {
     const { max, rate } = currentTier;
 
     const amountLeftToTax = flooredDifference(inputValue, minValue, 0);
-    const maxTaxableAmount = max !== Infinity ? max - minValue : amountLeftToTax;
+    const maxTaxableAmount = max !== Infinity ? subtract(max, minValue) : amountLeftToTax;
     const taxFromCurrentBracket = calculateLimitedTaxation(amountLeftToTax, rate, maxTaxableAmount);
 
     return total + taxFromCurrentBracket;
 };//CHANGED
-
-/**
- * Calculates salary after deducting UIF and PAYE
- * 
- * @param {number} grossSalary - value of Annual or DE-annualized gross salary
- * @param {number} uif - uif value of the same periods per annum as grossSalary
- * @param {number} paye - PAYE value of the same periods per annum as grossSalary
- * @returns 
- */
-const calculateNetSalary = (grossSalary, uif, paye) => grossSalary - uif - paye;
 
 /**
  * Calculates the gross annual PAYE for a given annual income and tax rebates
@@ -56,7 +46,7 @@ const calculateNetSalary = (grossSalary, uif, paye) => grossSalary - uif - paye;
 const calculateAnnualPAYE = (annualIncome, annualTaxRebates) => {
     const rawPaye = calculateFromTieredStructure(taxBrackets, annualIncome, calculateTaxTotal);
     return flooredDifference(rawPaye, annualTaxRebates, 0);
-}
+}//CHANGED
 
 /**
  * Calculates the annual payable UIF based on an annual salary
@@ -109,7 +99,7 @@ export const calculateTaxData = (employeeAge, grossSalary, periods) => {
     const deAnnualizedPaye = deAnnualize(annualPaye, periods);
 
     //Calculate salary after deducting Tax Rebates and PAYE
-    const netSalary = calculateNetSalary(grossSalary, deAnnualizedUIF, deAnnualizedPaye);
+    const netSalary = subtract(grossSalary, deAnnualizedUIF, deAnnualizedPaye);
 
     const results = {
         deAnnualizedPaye,
@@ -118,4 +108,4 @@ export const calculateTaxData = (employeeAge, grossSalary, periods) => {
     }
 
     return results;
-}
+} //CHANGED

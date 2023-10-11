@@ -94,3 +94,25 @@ export const calculateLimitedTaxation = (value, rate, ceiling) => {
     const result = takePercentage(applicableValue, percentage);
     return result;
 }
+
+/**
+* Adds any number of numerical arguments together.
+*
+* @param {...number} numbers - The numbers to be added.
+* @returns {number} The sum of all provided numbers.
+*/
+export const sum = (...numbers) => {
+ return numbers.reduce((sum, num) => sum + num, 0);
+};
+
+/**
+* Adds any number of numerical arguments together.
+* 
+* @param {number} initial - The number which will be deducted from
+* @param {...number} numbers - The numbers to be deducted from initial
+* @returns {number} Return the difference between initial and numbers
+*/
+export const subtract = (initial, ...numbers) => {
+    const totalSubtraction = numbers.reduce((res, num) => res + num, 0);
+    return initial - totalSubtraction;
+};
