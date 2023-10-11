@@ -8,6 +8,7 @@ const salaryResultDisplay = document.querySelector("#salary-result");
 
 const currencyCharacter = "R";
 
+//Data to create select options for the Period select element
 const periodOptions = [
     {
         text: "Weekly",

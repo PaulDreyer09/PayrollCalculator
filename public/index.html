@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Payroll Calculator</title>
-    <link rel="stylesheet" href="../src/css/styles.css">
-    <script type="module" src="../src/js/main.js"></script>
+    <link rel="stylesheet" href="./css/styles.css">
+    <script type="module" >
+        import * as calc from '../src/js/modules/ui/calculatorUI.js';
+        calc.initializeCalculator();
+    </script>
 </head>
 <body>
     <div class="container">        

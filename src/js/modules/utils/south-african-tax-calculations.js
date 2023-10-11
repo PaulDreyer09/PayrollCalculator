@@ -1,6 +1,6 @@
 import { calculateFromTieredStructure } from './abstract-calculations.js';
-import {taxRebatesBrackets, taxBrackets, uifOptions} from '../config/south-african-tax-properties.js'
-import {annualize, deAnnualize} from './helper-functions.js';
+import { taxRebatesBrackets, taxBrackets, uifOptions } from '../config/south-african-tax-properties.js'
+import { annualize, deAnnualize } from './helper-functions.js';
 
 /**
  * Example calculation function to add the value from the current tier to the total.
@@ -72,7 +72,7 @@ const calculateAnnualPAYE = (annualIncome, annualTaxRebates) => {
 const calculateAnnualUIF = (annualIncome, uifOptions) => {
     const { percentage, ceiling } = uifOptions;
     const monthlyIncome = annualIncome / 12;
-    const monthlyUIF = (Math.min(ceiling, monthlyIncome) * percentage / 100) 
+    const monthlyUIF = (Math.min(ceiling, monthlyIncome) * percentage / 100)
     const result = monthlyUIF * 12;
 
     return result;
@@ -99,7 +99,7 @@ const calculateAnnualUIF = (annualIncome, uifOptions) => {
  *      netSalary: Salary after deductions for the period 
  */
 export const calculateTaxData = (employeeAge, grossSalary, periods) => {
-    const annualIncome = annualize(grossSalary ,periods);
+    const annualIncome = annualize(grossSalary, periods);
 
     //Calculate UIF
     const annualUIF = calculateAnnualUIF(annualIncome, uifOptions);
@@ -113,7 +113,7 @@ export const calculateTaxData = (employeeAge, grossSalary, periods) => {
     const deAnnualizedPaye = deAnnualize(annualPaye, periods);
 
     //Calculate salary after deducting Tax Rebates and PAYE
-    const netSalary = calculateNetSalary(grossSalary,deAnnualizedUIF,deAnnualizedPaye);
+    const netSalary = calculateNetSalary(grossSalary, deAnnualizedUIF, deAnnualizedPaye);
 
     const results = {
         deAnnualizedPaye,
