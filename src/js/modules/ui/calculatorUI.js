@@ -1,7 +1,9 @@
-import {calculateTaxData} from '../utils/south-african-tax-calculations.js';
+import {calculateTaxData} from '../payroll-functions/south-african-tax-calculations.js';
 
-const taxForm = document.querySelector("#tax-form");
+const ageInput = document.querySelector("#age-input");
+const salaryInput = document.querySelector("#salary-input");
 const periodSelect = document.querySelector("#period-select");
+const submitButton = document.querySelector("#submit-button");
 const payeResultDisplay = document.querySelector("#paye-result");
 const uifResultDisplay = document.querySelector("#uif-result");
 const salaryResultDisplay = document.querySelector("#salary-result");
@@ -38,14 +40,10 @@ const periodOptions = [
  */
 const initializeSelect = (options, selectElement) => {
     //Clear any options from the select element
-    while (selectElement.firstChild) {
-        selectElement.removeChild(selectElement.firstChild);
-    }
+    selectElement.innerHTML = "";
 
     //Create and add option elements according to the options object
-    for (let i = 0; i < options.length; i++) {
-        const { text, value } = options[i];
-
+    for (const { text, value } of options) {
         const periodOption = document.createElement("option");
         periodOption.value = value;
         periodOption.text = text;
@@ -63,10 +61,10 @@ const initializeSelect = (options, selectElement) => {
  *      uif: UIF for the period | 
  *      netSalary: Salary after deductions for the period 
  */
-const displayCalculationResults = (paye, uif, netSalary) => {
-    payeResultDisplay.textContent = `${currencyCharacter} ${paye.toFixed(2)}`;
-    uifResultDisplay.textContent = `${currencyCharacter} ${uif.toFixed(2)}`;
-    salaryResultDisplay.textContent = `${currencyCharacter} ${netSalary.toFixed(2)}`;
+const displayCalculationResults = (output) => {
+    payeResultDisplay.textContent = `${currencyCharacter} ${output.deAnnualizedPaye.toFixed(2)}`;
+    uifResultDisplay.textContent = `${currencyCharacter} ${output.deAnnualizedUIF.toFixed(2)}`;
+    salaryResultDisplay.textContent = `${currencyCharacter} ${output.netSalary.toFixed(2)}`;
 }
 
 /**
@@ -74,20 +72,17 @@ const displayCalculationResults = (paye, uif, netSalary) => {
  * 
  * @param {Event} event | Submit event
  */
-const onSubmit = (event) => {
-    event.preventDefault();
+const onSubmit = () => {
+    const employeeAge = ageInput.value;
+    const grossSalary = salaryInput.value;
+    const periods = periodSelect.value;
 
-    // Get form data
-    const formData = event.target;
+    //Calculate tax data
+    const output = calculateTaxData(employeeAge, grossSalary, periods);
 
-    const employeeAge = formData.elements["age"].value;
-    const grossSalary = formData.elements["salary"].value;
-    const periods = formData.elements["period"].value;
-
-    const {deAnnualizedPaye, deAnnualizedUIF, netSalary} = calculateTaxData(employeeAge, grossSalary, periods);
-
-    displayCalculationResults(deAnnualizedPaye, deAnnualizedUIF, netSalary);
-}
+    //Display results
+    displayCalculationResults(output);
+}//CHANGED
 
 /**
  * Initializes the calculator functionality.
@@ -112,5 +107,5 @@ export const initializeCalculator = () => {
     initializeSelect(periodOptions, periodSelect);
 
     // Initialize form submit event
-    taxForm.addEventListener("submit", onSubmit);
+    submitButton.addEventListener("click", onSubmit);
 }

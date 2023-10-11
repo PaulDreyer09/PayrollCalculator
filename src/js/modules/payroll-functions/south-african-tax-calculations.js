@@ -1,7 +1,7 @@
-import { calculateFromTieredStructure } from './abstract-calculations.js';
 import { taxRebatesBrackets, taxBrackets, uifOptions } from '../config/south-african-tax-properties.js'
-import { annualize, deAnnualize } from './helper-functions.js';
+import { calculateFromTieredStructure, calculateLimitedTaxation, flooredDifference, annualize, deAnnualize } from './calculation-functions.js'
 
+//Move to global module
 /**
  * Example calculation function to add the value from the current tier to the total.
  * 
@@ -11,8 +11,8 @@ import { annualize, deAnnualize } from './helper-functions.js';
  *      value: The value to be added to the total for the current tier
  * @returns {number} - The updated total by adding the value from the current tier.
  */
-const calculateAddedTotal = (total, tier) => {
-    return total + tier.value;
+const calculateAddedTotal = (total, currentTier) => {
+    return total + currentTier.value;
 };
 
 /**
@@ -29,15 +29,12 @@ const calculateAddedTotal = (total, tier) => {
 const calculateTaxTotal = (total, currentTier, minValue, inputValue) => {
     const { max, rate } = currentTier;
 
-    const amountLeftToTax = Math.max(inputValue - minValue, 0);
+    const amountLeftToTax = flooredDifference(inputValue, minValue, 0);
     const maxTaxableAmount = max !== Infinity ? max - minValue : amountLeftToTax;
-    const currentTaxableAmount = Math.min(maxTaxableAmount, amountLeftToTax);
+    const taxFromCurrentBracket = calculateLimitedTaxation(amountLeftToTax, rate, maxTaxableAmount);
 
-    const taxFromCurrentBracket = currentTaxableAmount * rate / 100;
-    total += taxFromCurrentBracket;
-
-    return total;
-};
+    return total + taxFromCurrentBracket;
+};//CHANGED
 
 /**
  * Calculates salary after deducting UIF and PAYE
@@ -58,7 +55,7 @@ const calculateNetSalary = (grossSalary, uif, paye) => grossSalary - uif - paye;
  */
 const calculateAnnualPAYE = (annualIncome, annualTaxRebates) => {
     const rawPaye = calculateFromTieredStructure(taxBrackets, annualIncome, calculateTaxTotal);
-    return Math.max(rawPaye - annualTaxRebates, 0);
+    return flooredDifference(rawPaye, annualTaxRebates, 0);
 }
 
 /**
@@ -70,13 +67,12 @@ const calculateAnnualPAYE = (annualIncome, annualTaxRebates) => {
  *      ceiling: Maximum value which can be calculated from monthly income to UIF
  */
 const calculateAnnualUIF = (annualIncome, uifOptions) => {
-    const { percentage, ceiling } = uifOptions;
-    const monthlyIncome = annualIncome / 12;
-    const monthlyUIF = (Math.min(ceiling, monthlyIncome) * percentage / 100)
-    const result = monthlyUIF * 12;
-
+    const { rate, ceiling } = uifOptions;
+    const monthlyIncome = deAnnualize(annualIncome, 12);
+    const monthlyUIF = calculateLimitedTaxation(monthlyIncome, rate, ceiling);
+    const result = annualize(monthlyUIF, 12);
     return result;
-}
+}//CHANGED
 
 /**
  * Calculates the PAYE after deductions, the UIF for the period and Net Salary for the period

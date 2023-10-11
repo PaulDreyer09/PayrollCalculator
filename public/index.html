@@ -13,7 +13,7 @@
 <body>
     <div class="container">        
         <h1>Payroll Tax Calculator</h1>
-        <form id="tax-form">
+        <div id="tax-form">
             <div class="form-control">
                 <label for="age">Age</label>
                 <input type="number" name="age" id="age-input", min="0", value="0">
@@ -26,8 +26,8 @@
                 <label for="period">Period</label>
                 <select name="period" id="period-select"></select>
             </div>
-            <input type="submit" id="submit-button"/>
-        </form>
+            <input type="button" id="submit-button" value="Calculate"/>
+        </div>
         <div id="calculation-results" >
             <h2>Results: </h2>
             <div class="result">

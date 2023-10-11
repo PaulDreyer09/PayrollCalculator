@@ -45,6 +45,6 @@ export const taxBrackets = [
 ];
 
 export const uifOptions = {
-    percentage: 1,
+    rate: 1,
     ceiling: 17712, // Monthly UIF ceiling
 }
