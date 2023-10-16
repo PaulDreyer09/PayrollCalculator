@@ -1,68 +1,5 @@
 import { taxRebatesBrackets, taxBrackets, uifOptions } from '../config/south-african-tax-properties.js'
-import { calculateFromTieredStructure, calculateLimitedTaxation, flooredDifference, annualize, deAnnualize, sum, subtract } from './calculation-functions.js'
-
-//Move to global module
-/**
- * Example calculation function to add the value from the current tier to the total.
- * 
- * @param {number} total - The current total.
- * @param {{max: number, value: number}} tier
- *      max: The exclusive maximum value for the current tier
- *      value: The value to be added to the total for the current tier
- * @returns {number} - The updated total by adding the value from the current tier.
- */
-const calculateAddedTotal = (total, currentTier) => {
-    return sum(total, currentTier.value);
-};
-
-/**
- * Example calculation function to calculate tax total based on the current tier.
- * 
- * @param {number} total - The current total.
- * @param {{max: number, value: number}} currentTier
- *      max: The maximum value for the current tier |
- *      value: The tax rate for the current tier.
- * @param {number} minValue - The minimum value for the current tier.
- * @param {number} inputValue - The input value for the calculation.
- * @returns {number} - The updated total based on the current tier calculation.
- */
-const calculateTaxTotal = (total, currentTier, minValue, inputValue) => {
-    const { max, rate } = currentTier;
-
-    const amountLeftToTax = flooredDifference(inputValue, minValue, 0);
-    const maxTaxableAmount = max !== Infinity ? subtract(max, minValue) : amountLeftToTax;
-    const taxFromCurrentBracket = calculateLimitedTaxation(amountLeftToTax, rate, maxTaxableAmount);
-
-    return total + taxFromCurrentBracket;
-};//CHANGED
-
-/**
- * Calculates the gross annual PAYE for a given annual income and tax rebates
- * 
- * @param {number} annualIncome calculated annual income value
- * @param {number} annualTaxRebates calculated annual tax rebates to deduct from tax
- * @returns {number} - Annual PAYE after deductions
- */
-const calculateAnnualPAYE = (annualIncome, annualTaxRebates) => {
-    const rawPaye = calculateFromTieredStructure(taxBrackets, annualIncome, calculateTaxTotal);
-    return flooredDifference(rawPaye, annualTaxRebates, 0);
-}//CHANGED
-
-/**
- * Calculates the annual payable UIF based on an annual salary
- * 
- * @param {number} annualIncome - value of annual income
- * @param {{percentage: number, ceiling: number}[]} options - options for calculating the UIF
- *      percentage: Percentage of the total income which will be calculated as UIF
- *      ceiling: Maximum value which can be calculated from monthly income to UIF
- */
-const calculateAnnualUIF = (annualIncome, uifOptions) => {
-    const { rate, ceiling } = uifOptions;
-    const monthlyIncome = deAnnualize(annualIncome, 12);
-    const monthlyUIF = calculateLimitedTaxation(monthlyIncome, rate, ceiling);
-    const result = annualize(monthlyUIF, 12);
-    return result;
-}//CHANGED
+import * as calc from './calculation-functions.js'
 
 /**
  * Calculates the PAYE after deductions, the UIF for the period and Net Salary for the period
@@ -85,27 +22,35 @@ const calculateAnnualUIF = (annualIncome, uifOptions) => {
  *      netSalary: Salary after deductions for the period 
  */
 export const calculateTaxData = (employeeAge, grossSalary, periods) => {
-    const annualIncome = annualize(grossSalary, periods);
+    const annualIncome = calc.annualize(grossSalary, periods);
 
     //Calculate UIF
-    const annualUIF = calculateAnnualUIF(annualIncome, uifOptions);
-    const deAnnualizedUIF = deAnnualize(annualUIF, periods);
+    const monthlyIncome = calc.deAnnualize(annualIncome, 12);
+    const monthlyUIF = calc.calculateLimitedTaxation(monthlyIncome, uifOptions.rate, uifOptions.ceiling);
+    const annualUIF = calc.annualize(monthlyUIF, 12);
+    const deAnnualizedUIF = calc.deAnnualize(annualUIF, periods);
 
     //Calculate Tax Rebates
-    const taxRebates = calculateFromTieredStructure(taxRebatesBrackets, employeeAge, calculateAddedTotal);
+    const taxRebates = calc.calculateAddedTotalByTiers(taxRebatesBrackets, employeeAge);
 
     //Calculate PAYE
-    const annualPaye = calculateAnnualPAYE(annualIncome, taxRebates);
-    const deAnnualizedPaye = deAnnualize(annualPaye, periods);
+    const annualGrossPaye = calc.calculateTotalTaxByTiers(taxBrackets, annualIncome);
+    const annualNetPaye = calc.flooredDifference(annualGrossPaye, taxRebates);
+    const deAnnualizedPaye = calc.deAnnualize(annualNetPaye, periods);
 
     //Calculate salary after deducting Tax Rebates and PAYE
-    const netSalary = subtract(grossSalary, deAnnualizedUIF, deAnnualizedPaye);
+    const netSalary = calc.subtract(grossSalary, deAnnualizedUIF, deAnnualizedPaye);
 
-    const results = {
+    return {
         deAnnualizedPaye,
         deAnnualizedUIF,
         netSalary
-    }
+    };
+};
 
-    return results;
-} //CHANGED
+/**
+ * Vacuum world
+ * Command Pattern
+ * Reaffication
+ * Event Sourcing
+ */

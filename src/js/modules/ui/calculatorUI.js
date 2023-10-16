@@ -1,9 +1,11 @@
 import {calculateTaxData} from '../payroll-functions/south-african-tax-calculations.js';
 
+//Input form elements
 const ageInput = document.querySelector("#age-input");
 const salaryInput = document.querySelector("#salary-input");
 const periodSelect = document.querySelector("#period-select");
 const submitButton = document.querySelector("#submit-button");
+//Result display elements
 const payeResultDisplay = document.querySelector("#paye-result");
 const uifResultDisplay = document.querySelector("#uif-result");
 const salaryResultDisplay = document.querySelector("#salary-result");
