@@ -1,56 +1,4 @@
-/**
- * Returns the lesser number between value1 and value2
- * 
- * @param {number} value1 
- * @param {number} value2 
- * @returns {number}
- */
-export const lesserOf = (value1, value2) => Math.min(value1, value2);
-
-/**
- * Converts a rate to its corresponding decimal representation.
- *
- * @param {number} rate - The rate to be converted (e.g., 20 for 20%).
- * @returns {number} The decimal representation of the rate (e.g., 0.2 for 20%).
- */
-export const makePercentage = (rate) => rate / 100;
-
-/**
- * Calculates the value after applying a percentage.
- *
- * @param {number} value - The original value.
- * @param {number} percentage - The percentage to apply as a decimal (e.g., 0.2 for 20%).
- * @returns {number} The result of applying the percentage to the value.
- */
-export const takePercentage = (value, percentage) => value * percentage;
-
-/**
- * Calculates the difference between two values, considering a minimum (floor) value.
- *
- * @param {number} value1 - The first value.
- * @param {number} value2 - The second value to subtract from the first.
- * @param {number} floor - The minimum allowed difference.
- * @returns {number} The difference between the values, but not less than the specified floor.
- */
-export const flooredDifference = (value1, value2) => Math.max(value1 - value2, 0);
-
-/**
- * Calculates how much the value will be per year for a given value per period(monthly: 12)
- * 
- * @param {number} value - value of the number to be annualized
- * @param {number} currentPeriodsPerAnnum - number of periods per annum
- * @returns 
- */
-export const annualize = (value, currentPeriodsPerAnnum) => value * currentPeriodsPerAnnum;
-
-/**
- * Calculates how much the value will be per period for a given annual value
- * 
- * @param {number} value - annual value to be DE-annualized
- * @param {number} newPeriodsPerAnnum - number of periods per annum
- * @returns 
- */
-export const deAnnualize = (value, newPeriodsPerAnnum) =>  value / newPeriodsPerAnnum;
+import * as validation from '../utils/validation.js';
 
 /**
 * Adds any number of numerical arguments together.
@@ -60,8 +8,8 @@ export const deAnnualize = (value, newPeriodsPerAnnum) =>  value / newPeriodsPer
 */
 export const sum = (...numbers) => {
     let total = 0;
-    for(const num of numbers){
-        total += num;
+    for (const num of numbers) {
+        total += validation.validNumber(num);
     }
     return total;
 };
@@ -74,11 +22,100 @@ export const sum = (...numbers) => {
 * @returns {number} Return the difference between initial and numbers
 */
 export const subtract = (initial, ...numbers) => {
-    for(const num of numbers){
-        initial -= num;
+    let result = validation.validNumber(initial);
+    for (const num of numbers) {
+        result -= validation.validNumber(num);
     }
-    return initial;
+    return result;
 };
+
+/**
+ * 
+ * @param {number} num1 first value
+ * @param {number} num2 second value
+ * @returns {number} num1 multiplied by num2
+ */
+export const multiply = (initial, ...numbers) => {
+    let result = validation.validNumber(initial);
+    for (const num of numbers) {
+        result *= validation.validNumber(num)
+    }
+    return result;
+}
+
+/**
+ * 
+ * @param {number}num1 first value
+ * @param {number} num2 second value
+ * @returns {number} num1 divided by num2
+ */
+export const divide = (initial, ...numbers) => {
+    let result = validation.validNumber(initial);
+    for(const num of numbers) {
+        result /= validation.validNumberNonZero(num);
+    }
+    return result;
+}
+
+/**
+ * Returns the lesser number between value1 and value2
+ * 
+ * @param {number} value1 
+ * @param {number} value2 
+ * @returns {number}
+ */
+export const lesserOf = (...values) => {
+    const validValues = [];
+    for(const number of values){
+        validValues.push(validation.validNumber(number));
+    }
+    return Math.min(...validValues);
+}
+/**
+ * Converts a rate to its corresponding decimal representation.
+ *
+ * @param {number} rate - The rate to be converted (e.g., 20 for 20%).
+ * @returns {number} The decimal representation of the rate (e.g., 0.2 for 20%).
+ */
+export const makePercentage = (rate) => validation.validNumber(rate) / 100;
+
+/**
+ * Calculates the value after applying a percentage.
+ *
+ * @param {number} value - The original value.
+ * @param {number} percentage - The percentage to apply as a decimal (e.g., 0.2 for 20%).
+ * @returns {number} The result of applying the percentage to the value.
+ */
+export const takePercentage = (value, percentage) => 
+    validation.validNumber(value) * validation.validNumber(percentage);
+
+/**
+ * Calculates the difference between a given input number and more input numbers with a minimum of 0 as the return value
+ * @param  {...number} values | a list of numbers to be subtracted from the first input number
+ * @returns {number}
+ */
+export const flooredDifference = (...values) => 
+    Math.max(subtract(...values), 0);
+
+/**
+ * Calculates how much the value will be per year for a given value per period(monthly: 12)
+ * 
+ * @param {number} value - value of the number to be annualized
+ * @param {number} currentPeriodsPerAnnum - number of periods per annum
+ * @returns 
+ */
+export const annualize = (value, currentPeriodsPerAnnum) => 
+    validation.validNumber(value) * validation.validNumber(currentPeriodsPerAnnum);
+
+/**
+ * Calculates how much the value will be per period for a given annual value
+ * 
+ * @param {number} value - annual value to be DE-annualized
+ * @param {number} newPeriodsPerAnnum - number of periods per annum
+ * @returns 
+ */
+export const deAnnualize = (value, newPeriodsPerAnnum) =>  
+    validation.validNumber(value) / validation.validNumber(newPeriodsPerAnnum);
 
 
 /**
@@ -117,9 +154,9 @@ export const calculateFromTieredStructure = (tiers, inputValue, calculationFunct
 
     for(const tier of tiers){
         if (inputValue >= priorMax) {
-            total = calculationFunction(total, tier, priorMax, inputValue);
+            total = calculationFunction(total, tier, priorMax, validation.validNumber(inputValue));
         }
-        priorMax = tier.max;
+        priorMax = validation.validNumberOrInfinite(tier.max);
     }
     return total;
 };
@@ -134,7 +171,7 @@ export const calculateFromTieredStructure = (tiers, inputValue, calculationFunct
  * @returns {number} - The updated total by adding the value from the current tier.
  */
 export const calculateAddedTotalByCurrentTier = (total, currentTier) => {
-    return sum(total, currentTier.value);
+    return sum(validation.validNumber(total), validation.validNumber(currentTier.value));
 };
 
 /**
@@ -147,7 +184,7 @@ export const calculateAddedTotalByCurrentTier = (total, currentTier) => {
  * @returns {number} - The calculated total based on the provided tiers and value to compare.
  */
 export const calculateAddedTotalByTiers = (tiers, valueToCompare) => {
-    const result = calculateFromTieredStructure(tiers, valueToCompare, calculateAddedTotalByCurrentTier);
+    const result = calculateFromTieredStructure(tiers, validation.validNumber(valueToCompare), calculateAddedTotalByCurrentTier);
     return result;
 }
 
@@ -163,10 +200,10 @@ export const calculateAddedTotalByTiers = (tiers, valueToCompare) => {
  * @returns {number} - The updated total based on the current tier calculation.
  */
 export const calculateTaxByCurrentTier = (total, currentTier, minValue, inputValue) => {
-    const { max, rate } = currentTier;    
-    const amountLeftToTax = flooredDifference(inputValue, minValue);
-    const maxTaxableAmount = max !== Infinity ? subtract(max, minValue) : amountLeftToTax;
-    const taxFromCurrentBracket = calculateLimitedTaxation(amountLeftToTax, rate, maxTaxableAmount);
+    const { max, rate } = currentTier;
+    const amountLeftToTax = flooredDifference(validation.validNumber(inputValue), validation.validNumber(minValue));
+    const maxTaxableAmount = validation.validNumberOrInfinite(max) !== Infinity ? subtract(max, minValue) : amountLeftToTax;
+    const taxFromCurrentBracket = calculateLimitedTaxation(amountLeftToTax, validation.validNumber(rate), maxTaxableAmount);
     return sum(total, taxFromCurrentBracket);
 };
 
@@ -180,6 +217,6 @@ export const calculateTaxByCurrentTier = (total, currentTier, minValue, inputVal
  * @returns {number} - The total tax based on the provided tax brackets and income.
  */
 export const calculateTotalTaxByTiers = (taxBrackets, income) => {
-    const taxResult = calculateFromTieredStructure(taxBrackets, income, calculateTaxByCurrentTier);
+    const taxResult = calculateFromTieredStructure(taxBrackets, validation.validNumber(income), calculateTaxByCurrentTier);
     return taxResult;
 }

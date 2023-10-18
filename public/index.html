@@ -6,7 +6,9 @@
     <title>Payroll Calculator</title>
     <link rel="stylesheet" href="./css/styles.css">
     <script type="module" >
+        import * as commands from '../src/js/modules/commands/payroll-commands.js';
         import * as calc from '../src/js/modules/ui/calculatorUI.js';
+        window.cmd = commands;
         calc.initializeCalculator();
     </script>
 </head>

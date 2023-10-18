@@ -75,9 +75,9 @@ const displayCalculationResults = (output) => {
  * @param {Event} event | Submit event
  */
 const onSubmit = () => {
-    const employeeAge = ageInput.value;
-    const grossSalary = salaryInput.value;
-    const periods = periodSelect.value;
+    const employeeAge = parseFloat(ageInput.value);
+    const grossSalary = parseFloat(salaryInput.value);
+    const periods = parseFloat(periodSelect.value);
 
     //Calculate tax data
     const output = calculateTaxData(employeeAge, grossSalary, periods);
