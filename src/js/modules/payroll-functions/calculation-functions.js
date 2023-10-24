@@ -51,7 +51,7 @@ export const multiply = (initial, ...numbers) => {
  */
 export const divide = (initial, ...numbers) => {
     let result = validation.validNumber(initial);
-    for(const num of numbers) {
+    for (const num of numbers) {
         result /= validation.validNumberNonZero(num);
     }
     return result;
@@ -66,7 +66,7 @@ export const divide = (initial, ...numbers) => {
  */
 export const lesserOf = (...values) => {
     const validValues = [];
-    for(const number of values){
+    for (const number of values) {
         validValues.push(validation.validNumber(number));
     }
     return Math.min(...validValues);
@@ -86,7 +86,7 @@ export const makePercentage = (rate) => validation.validNumber(rate) / 100;
  * @param {number} percentage - The percentage to apply as a decimal (e.g., 0.2 for 20%).
  * @returns {number} The result of applying the percentage to the value.
  */
-export const takePercentage = (value, percentage) => 
+export const takePercentage = (value, percentage) =>
     validation.validNumber(value) * validation.validNumber(percentage);
 
 /**
@@ -94,7 +94,7 @@ export const takePercentage = (value, percentage) =>
  * @param  {...number} values | a list of numbers to be subtracted from the first input number
  * @returns {number}
  */
-export const flooredDifference = (...values) => 
+export const flooredDifference = (...values) =>
     Math.max(subtract(...values), 0);
 
 /**
@@ -104,7 +104,7 @@ export const flooredDifference = (...values) =>
  * @param {number} currentPeriodsPerAnnum - number of periods per annum
  * @returns 
  */
-export const annualize = (value, currentPeriodsPerAnnum) => 
+export const annualize = (value, currentPeriodsPerAnnum) =>
     validation.validNumber(value) * validation.validNumber(currentPeriodsPerAnnum);
 
 /**
@@ -114,7 +114,7 @@ export const annualize = (value, currentPeriodsPerAnnum) =>
  * @param {number} newPeriodsPerAnnum - number of periods per annum
  * @returns 
  */
-export const deAnnualize = (value, newPeriodsPerAnnum) =>  
+export const deAnnualize = (value, newPeriodsPerAnnum) =>
     validation.validNumber(value) / validation.validNumber(newPeriodsPerAnnum);
 
 
@@ -152,7 +152,7 @@ export const calculateFromTieredStructure = (tiers, inputValue, calculationFunct
     let total = 0;
     let priorMax = 0;
 
-    for(const tier of tiers){
+    for (const tier of tiers) {
         if (inputValue >= priorMax) {
             total = calculationFunction(total, tier, priorMax, validation.validNumber(inputValue));
         }

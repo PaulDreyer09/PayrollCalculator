@@ -6,45 +6,16 @@
     <title>Payroll Calculator</title>
     <link rel="stylesheet" href="./css/styles.css">
     <script type="module" >
-        import * as commands from '../src/js/modules/commands/payroll-commands.js';
-        import * as calc from '../src/js/modules/ui/calculatorUI.js';
-        window.cmd = commands;
-        calc.initializeCalculator();
+        import * as UI from '../src/js/modules/ui/calculatorUI.js';
+        import * as test from '../src/js/modules/utils/string-manipulation.js';
+        document.test = test;
+
+        UI.initializeCalculator();
     </script>
 </head>
 <body>
-    <div class="container">        
-        <h1>Payroll Tax Calculator</h1>
-        <div id="tax-form">
-            <div class="form-control">
-                <label for="age">Age</label>
-                <input type="number" name="age" id="age-input", min="0", value="0">
-            </div>
-            <div class="form-control">
-                <label for="salary">Salary</label>
-                <input type="number" name="salary" id="salary-input", min="0", value="0">
-            </div>
-            <div class="form-control">
-                <label for="period">Period</label>
-                <select name="period" id="period-select"></select>
-            </div>
-            <input type="button" id="submit-button" value="Calculate"/>
-        </div>
-        <div id="calculation-results" >
-            <h2>Results: </h2>
-            <div class="result">
-                <label for="paye-result">PAYE: </label>
-                <p id="paye-result"></p>
-            </div>
-            <div class="result">
-                <label for="uif-result">UIF: </label>
-                <p id="uif-result"></p>
-            </div>
-            <div class="result">
-                <label for="salary-result">Net Salary: </label>
-                <p id="salary-result"></p>
-            </div>
-        </div>
+    <div id="calculator" class="container">        
+        <h1>Payroll Tax Calculator</h1>       
     </div>
 </body>
 </html>

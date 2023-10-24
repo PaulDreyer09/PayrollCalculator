@@ -1,6 +1,109 @@
-import { taxRebatesBrackets, taxBrackets, uifOptions } from '../config/south-african-tax-properties.js';
-import * as calc from './calculation-functions.js';
-import * as cmd from '../commands/payroll-commands.js';
+import { taxRebatesBrackets, taxBrackets, uifOptions, inputList, outputList } from '../config/south-african-tax-properties.js';
+import * as generalCommands from '../commands/commands.js';
+import * as arithmaticCommands from '../commands/arithmatic-commands.js';
+import * as ioCommands from '../commands/io-setup-commands.js';
+
+
+
+const commands = [
+    new ioCommands.IOSetupCommand('requiredInput', {
+        elementType: 'input',
+        dataType: 'number',
+        elementAttributes: {
+            name: 'otter',
+            type: 'number',
+            value: 0,
+            min: 0           
+        },
+        labelText: 'Otter'
+    }),
+    new ioCommands.IOSetupCommand('requiredInput', {
+        elementType: 'input',
+        dataType: 'number',
+        elementAttributes: {
+            name: 'employeeAge',
+            type: 'number',
+            value: 0,
+            min: 0
+        },
+        labelText: 'Age',
+    }),
+    new ioCommands.IOSetupCommand('requiredInput', {
+        elementType: 'input',
+        dataType: 'number',
+        elementAttributes: {
+            name: 'grossSalary',
+            type: 'number',
+            value: 0,
+            min: 0
+        },
+        labelText: 'Salary',
+    }),
+    new ioCommands.IOSetupCommand('requiredInput', {
+        elementType: 'select',
+        dataType: 'number',
+        elementAttributes: {
+            name: 'periodsPerAnnum',
+        },
+        labelText: 'Period',
+        options: [
+            {
+                text: "Weekly",
+                value: 52
+            },
+            {
+                text: "Every 2 Weeks",
+                value: 26
+            },
+            {
+                text: "Monthly",
+                value: 12
+            },
+            {
+                text: "Yearly",
+                value: 1
+            }
+        ]
+    }),
+    new ioCommands.IOSetupCommand('expectedOutput', {
+        name: 'deAnnualizedNetPaye',
+        labelText: 'PAYE',
+    }),
+    new ioCommands.IOSetupCommand('expectedOutput', {
+        name: 'deAnnualizedUif',
+        labelText: 'UIF',
+    }),
+    new ioCommands.IOSetupCommand('expectedOutput', {
+        name: 'netSalary',
+        labelText: 'Net Salary',
+    }),
+    new generalCommands.SetValueCommand('monthsPerYear', 12),
+    new generalCommands.SetValuesCommand('uif', uifOptions),
+    new generalCommands.SetValueCommand('taxRebatesBrackets', taxRebatesBrackets),
+    new generalCommands.SetValueCommand('taxBrackets', taxBrackets),
+    new arithmaticCommands.AnnualizeCommand('annualIncome', 'grossSalary', 'periodsPerAnnum'),
+    new arithmaticCommands.DeAnnualizeCommand('monthlyIncome', 'annualIncome', 'monthsPerYear'),
+    new arithmaticCommands.CalculateLimitedTaxationCommand('monthlyUif', 'monthlyIncome', 'uifRate', 'uifCeiling'),
+    new arithmaticCommands.AnnualizeCommand('annualUif', 'monthlyUif', 'monthsPerYear'),
+    new arithmaticCommands.DeAnnualizeCommand('deAnnualizedUif', 'annualUif', 'periodsPerAnnum'),
+    new arithmaticCommands.CalculateAddedTotalByTiersCommand('annualTaxRebates', 'taxRebatesBrackets', 'employeeAge'),
+    new arithmaticCommands.CalculateTaxByTiersCommand('annualGrossPaye', 'taxBrackets', 'annualIncome'),
+    new arithmaticCommands.FlooredDifferenceCommand('annualNetPaye', 'annualGrossPaye', 'annualTaxRebates'),
+    new arithmaticCommands.DeAnnualizeCommand('deAnnualizedNetPaye', 'annualNetPaye', 'periodsPerAnnum'),
+    new arithmaticCommands.SubtractCommand('netSalary', 'grossSalary', 'deAnnualizedUif', 'deAnnualizedNetPaye'),
+];
+
+export const addInputData = (inputData) => {    
+    const inputCommand = new generalCommands.SetValueCommand(inputData.name, inputData.value);
+    commands.unshift(inputCommand);
+}
+
+export const executeIOCommands = (dataSheet) => {
+    for (const command of commands) {        
+        if (command instanceof ioCommands.IOSetupCommand)
+            dataSheet = command.execute(dataSheet);
+    }
+}
 
 /**
  * Calculates the PAYE after deductions, the UIF for the period and Net Salary for the period
@@ -22,58 +125,13 @@ import * as cmd from '../commands/payroll-commands.js';
  *      uif: UIF for the period | 
  *      netSalary: Salary after deductions for the period 
  */
-export const calculateTaxData = (employeeAge, grossSalary, periodsPerAnnum) => {
-    let values = {
-        employeeAge, 
-        grossSalary, 
-        periodsPerAnnum,
-        uifRate: uifOptions.rate,
-        uifCeiling: uifOptions.ceiling,
-        taxRebatesBrackets,
-        taxBrackets,
-    };
-    
-    const commands = [
-        new cmd.AnnualizeCommand('annualIncome', 'grossSalary', 'periodsPerAnnum'),
-        new cmd.DeAnnualizeByFixedPeriodsCommand('monthlyIncome', 'annualIncome', 12),
-        new cmd.CalculateLimitedTaxationCommand('monthlyUif', 'monthlyIncome', 'uifRate', 'uifCeiling'),
-        new cmd.AnnualizeByFixedPeriodsCommand('annualUif', 'monthlyUif', 12),
-        new cmd.DeAnnualizeCommand('deAnnualizedUif', 'annualUif', 'periodsPerAnnum'),
-        new cmd.CalculateAddedTotalByTiersCommand('annualTaxRebates', 'taxRebatesBrackets', 'employeeAge'),
-        new cmd.CalculateTaxByTiersCommand('annualGrossPaye', 'taxBrackets', 'annualIncome'),
-        new cmd.FlooredDifferenceCommand('annualNetPaye', 'annualGrossPaye', 'annualTaxRebates'),
-        new cmd.DeAnnualizeCommand('deAnnualizedNetPaye', 'annualNetPaye', 'periodsPerAnnum'),
-        new cmd.SubtractCommand('netSalary', 'grossSalary', 'deAnnualizedUif', 'deAnnualizedNetPaye'),
-      ];
-    
-    for(const command of commands){
-        values = command.execute(values);
+export const executeCalculationCommands = (dataSheet) => {
+    for (const command of commands) {
+        if (command instanceof ioCommands.IOSetupCommand)
+            continue;
+        dataSheet = command.execute(dataSheet);
     }
-    console.log('values', values)
-    
-    // const annualIncome = calc.annualize(grossSalary, periodsPerAnnum);
 
-    // //Calculate UIF
-    // const monthlyIncome = calc.deAnnualize(annualIncome, 12);    
-    // const monthlyUIF = calc.calculateLimitedTaxation(monthlyIncome, uifOptions.rate, uifOptions.ceiling);    
-    // const annualUIF = calc.annualize(monthlyUIF, 12);
-    // const deAnnualizedUIF = calc.deAnnualize(annualUIF, periodsPerAnnum);
-    
-
-    // //Calculate Tax Rebates
-    // const taxRebates = calc.calculateAddedTotalByTiers(taxRebatesBrackets, employeeAge);
-
-    // //Calculate PAYE
-    // const annualGrossPaye = calc.calculateTotalTaxByTiers(taxBrackets, annualIncome);
-    // const annualNetPaye = calc.flooredDifference(annualGrossPaye, taxRebates);
-    // const deAnnualizedPaye = calc.deAnnualize(annualNetPaye, periodsPerAnnum);
-
-    // //Calculate salary after deducting Tax Rebates and PAYE
-    // const netSalary = calc.subtract(grossSalary, deAnnualizedUIF, deAnnualizedPaye);
-
-    return {
-        deAnnualizedPaye: values.deAnnualizedNetPaye,
-        deAnnualizedUIF: values.deAnnualizedUif,
-        netSalary: values.netSalary
-    };
+    return dataSheet;
 };
+

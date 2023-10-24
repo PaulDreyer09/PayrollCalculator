@@ -48,3 +48,36 @@ export const uifOptions = {
     rate: 1,
     ceiling: 17712, // Monthly UIF ceiling
 }
+
+export const inputList = [
+    {
+        name: 'age',
+        type: 'number',
+        labelString: 'Age'
+    },
+    {
+        name: 'salary',
+        type: 'number',
+        labelString: 'Salary'
+    },
+    {
+        name: 'periodsPerAnnum',
+        type: 'select',
+        labelString: 'Period'
+    }
+]
+
+export const outputList = [
+    {
+        name: 'deAnnualizedNetPaye',
+        labelString: 'PAYE',
+    },
+    {
+        name: 'deAnnualizedUif',
+        labelString: 'UIF',
+    },
+    {
+        name: 'netSalary',
+        labelString: 'Net Salary',
+    }
+]

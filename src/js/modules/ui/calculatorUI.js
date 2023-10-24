@@ -1,57 +1,28 @@
-import {calculateTaxData} from '../payroll-functions/south-african-tax-calculations.js';
+import * as commandFunctions from '../payroll-functions/south-african-tax-calculations.js';
+import * as validation from '../utils/validation.js';
+import * as dom from '../utils/dom-creation.js';
 
-//Input form elements
-const ageInput = document.querySelector("#age-input");
-const salaryInput = document.querySelector("#salary-input");
-const periodSelect = document.querySelector("#period-select");
-const submitButton = document.querySelector("#submit-button");
-//Result display elements
-const payeResultDisplay = document.querySelector("#paye-result");
-const uifResultDisplay = document.querySelector("#uif-result");
-const salaryResultDisplay = document.querySelector("#salary-result");
+const UIElements = {
+    inputs: [],
+    outputs: []
+};
 
 const currencyCharacter = "R";
 
-//Data to create select options for the Period select element
-const periodOptions = [
-    {
-        text: "Weekly",
-        value: 52
-    },
-    {
-        text: "Every 2 Weeks",
-        value: 26
-    },
-    {
-        text: "Monthly",
-        value: 12
-    },
-    {
-        text: "Yearly",
-        value: 1
+const addInputField = (containerElement, { labelText, elementType, elementAttributes, options = [] }) => {
+    const inputName = validation.validString(elementAttributes.name);
+    const inputLabelText = validation.validString(labelText);
+
+    const inputFieldContainer = dom.createContainerWithLabel(inputLabelText, inputName, ['form-control']);
+    const inputElement = dom.createElement(elementType, elementAttributes);
+
+    if (elementType == 'select') {
+        dom.initializeSelect(options, inputElement);
     }
-];
 
-/**
- * Populates a select element with the given options.
- *      Each option text will be the key, and the value will be the value of each item in options array.
- * @param {{text: string, value: any}[]} options : array list object filled with text and value of the option
- *      text: Text value of the option
- *      value: Value of the option
- * @param {Element} selectElement :select element to populate with options
- */
-const initializeSelect = (options, selectElement) => {
-    //Clear any options from the select element
-    selectElement.innerHTML = "";
-
-    //Create and add option elements according to the options object
-    for (const { text, value } of options) {
-        const periodOption = document.createElement("option");
-        periodOption.value = value;
-        periodOption.text = text;
-
-        selectElement.appendChild(periodOption);
-    }
+    inputFieldContainer.append(inputElement);
+    UIElements.inputs.push(inputElement);
+    containerElement.append(inputFieldContainer);
 }
 
 /**
@@ -63,28 +34,112 @@ const initializeSelect = (options, selectElement) => {
  *      uif: UIF for the period | 
  *      netSalary: Salary after deductions for the period 
  */
-const displayCalculationResults = (output) => {
-    payeResultDisplay.textContent = `${currencyCharacter} ${output.deAnnualizedPaye.toFixed(2)}`;
-    uifResultDisplay.textContent = `${currencyCharacter} ${output.deAnnualizedUIF.toFixed(2)}`;
-    salaryResultDisplay.textContent = `${currencyCharacter} ${output.netSalary.toFixed(2)}`;
+const displayCalculationResults = (results) => {
+    for(const {name} of results.expectedOutput){
+        const outputElementId = name + '-result';
+        const outputElement = document.querySelector(`#${outputElementId}`);
+        const value = results.outputData[name];
+
+        outputElement.innerHTML = `${currencyCharacter} ${value.toFixed(2)}`;
+    }
 }
 
 /**
  * Collects the data from the submitted form and has the PAYE data calculated and displayed on the results page
  * 
- * @param {Event} event | Submit event
  */
-const onSubmit = () => {
-    const employeeAge = parseFloat(ageInput.value);
-    const grossSalary = parseFloat(salaryInput.value);
-    const periods = parseFloat(periodSelect.value);
+const onSubmit = (inputElements) => {
+    const inputData = [];
+    for (const inputElement of inputElements) {
+        const name = inputElement.name;
+        let value = inputElement.value;
+        inputData.push({ name, value });
+    }
 
-    //Calculate tax data
-    const output = calculateTaxData(employeeAge, grossSalary, periods);
+    const results = calculateResults(inputData);
+    displayCalculationResults(results);
+}
 
-    //Display results
-    displayCalculationResults(output);
-}//CHANGED
+const calculateResults = (inputData) => {
+    //**Currently does not use commands to update for input data
+    const dataSheet = {}
+
+    commandFunctions.executeIOCommands(dataSheet);
+    updateDataSheet(dataSheet, inputData);
+
+    commandFunctions.executeCalculationCommands(dataSheet);
+    console.log('Datasheet after commands: ', dataSheet);
+    return getDataSheetResultData(dataSheet);
+}
+
+const updateDataSheet = (dataSheet, inputData) => {
+    //**Currently does not use commands to update for input data
+    for (const data of inputData) {
+        const requiredInput = dataSheet.requiredInput.find((obj) => obj.elementAttributes.name == data.name);
+
+        if (!requiredInput) {
+            throw new Error(`Data sheet does not contain a required input with the reference: ${data.name}`);
+        }
+        if (requiredInput.dataType == 'number') {
+            data.value = parseFloat(data.value);
+        }
+        dataSheet[data.name] = data.value;
+
+        //Adding commands gives the issue that multiple commands are saved when repeated submissions
+        // commandFunctions.addInputData(data);
+    }
+}
+
+const getDataSheetResultData = (dataSheet) => {
+    const results = {expectedOutput: dataSheet.expectedOutput, outputData: {}};
+
+    for (const outputItem of dataSheet.expectedOutput) {
+        const reference = outputItem.name;
+        if (!reference in dataSheet)
+            throw new Error(`Required output, ${reference}, was not found within the data sheet references.`);
+        results.outputData[reference] = dataSheet[reference];
+    }
+    console.log('getDataSheetResultData', results)
+    return results;
+}
+
+const initializeInputSection = (containerElement, dataSheet) => {
+    const inputsContainer = dom.createElement('div', { id: 'inputSection' });
+    for (const item of dataSheet['requiredInput']) {
+        // console.log('Item to create', item)
+        // let inputItemElement = create(item);
+        addInputField(inputsContainer, item);
+    }
+
+    const submitButton = dom.createElement('input', {
+        type: 'button',
+        value: 'Submit',
+        id: 'submit-button',
+        onclick: () => onSubmit(UIElements.inputs),
+    });
+
+    inputsContainer.append(submitButton);
+
+    containerElement.append(inputsContainer);
+}
+
+const initializeOutputSection = (containerElement, dataSheet) => {
+    const outputFieldListContainer = dom.createElement('div', { id: 'outputSection' });
+
+    for (const item of dataSheet['expectedOutput']) {
+        const outputFieldContainer = dom.createContainerWithLabel(item.labelText, item.name , ['result']);
+        // const outputFieldContainer = dom.createElement('div', {} ,['result']);
+        // const label = dom.createElement('label', {for: item.name});
+        // label.innerHTML = item.labelText
+        const resultText = dom.createElement('p', {id: item.name + '-result'});
+
+        // outputFieldContainer.append(label);
+        outputFieldContainer.append(resultText);
+        outputFieldListContainer.append(outputFieldContainer);
+        // console.log(item);
+    }
+    containerElement.append(outputFieldListContainer);
+}
 
 /**
  * Initializes the calculator functionality.
@@ -105,9 +160,11 @@ const onSubmit = () => {
  * @param {string} currencyCharacter - Character representing the currency symbol.
  */
 export const initializeCalculator = () => {
-    // Initialize Period Select with options
-    initializeSelect(periodOptions, periodSelect);
+    const dataSheet = {};
+    commandFunctions.executeIOCommands(dataSheet);
 
-    // Initialize form submit event
-    submitButton.addEventListener("click", onSubmit);
+    // console.log(UIElements)
+    const ui = document.querySelector('#calculator');
+    initializeInputSection(ui, dataSheet);
+    initializeOutputSection(ui, dataSheet);
 }

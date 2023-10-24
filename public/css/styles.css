@@ -30,7 +30,7 @@ body *{
     padding: 0 1em;
 }
 
-#tax-form{
+#inputSection{
     display: flex;
     flex-direction: column;
 }
@@ -56,7 +56,7 @@ body *{
     color: white;
 }
 
-#calculation-results .result{
+#outputSection .result{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -64,7 +64,7 @@ body *{
     border-bottom: 1px solid #aaa;
 }
 
-#calculation-results .result p{
+#outputSection .result p{
     height: 1.5em;
     line-height: 1.5em;
 }
