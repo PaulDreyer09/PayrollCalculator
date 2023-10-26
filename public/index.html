@@ -6,7 +6,7 @@
     <title>Payroll Calculator</title>
     <link rel="stylesheet" href="./css/styles.css">
     <script type="module" >
-        import * as UI from '../src/js/modules/ui/calculatorUI.js';
+        import * as UI from '../src/js/ui/calculatorUI.js';
         import * as test from '../src/js/modules/utils/string-manipulation.js';
         document.test = test;
 
@@ -15,7 +15,15 @@
 </head>
 <body>
     <div id="calculator" class="container">        
-        <h1>Payroll Tax Calculator</h1>       
+        <div class="header">
+            <h1>Payroll Tax Calculator</h1>      
+
+        </div>
+        <div class="body">
+            <div id="input-section"></div>
+            <div id="output-section"></div>
+        </div>
+
     </div>
 </body>
 </html>

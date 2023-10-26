@@ -1,5 +1,14 @@
 import * as validation from './validation.js'
 
+/**
+ * Creates and returns a new HTML element with the specified type, attributes, class list, and inner HTML.
+ *
+ * @param {string} elementType - The type of HTML element to create (e.g., 'div', 'p', 'span').
+ * @param {object} attributes - An object containing attributes to set for the created element.
+ * @param {string[]} classList - An array of class names to add to the created element.
+ * @param {string} innerHTML - The inner HTML content for the created element.
+ * @returns {HTMLElement} - The newly created HTML element.
+ */
 export const createElement = (elementType, attributes = {}, classList = [], innerHTML = '') => {
     const element = Object.assign(document.createElement(elementType), attributes);
     element.innerHTML = innerHTML;
@@ -11,6 +20,14 @@ export const createElement = (elementType, attributes = {}, classList = [], inne
     return element;
 }
 
+/**
+ * Creates a container element with a label and returns it.
+ *
+ * @param {string} labelText - The text content for the label.
+ * @param {string} forName - The 'for' attribute of the label, associating it with an input element.
+ * @param {string[]} classList - An array of class names to add to the container element.
+ * @returns {HTMLElement} - The container element with the label.
+ */
 export const createContainerWithLabel = (labelText, forName = '', classList) => {
     const containerElement = createElement('div', {}, classList);
     const label = createElement('label', { for: forName }, [], labelText);
@@ -36,5 +53,17 @@ export const initializeSelect = (options, selectElement) => {
         const periodOption = createElement("option", { value}, [],text  );
 
         selectElement.appendChild(periodOption);
+    }
+}
+
+/**
+ * Removes any nodes inside of a given element, also clearing references to the child nodes
+ * 
+ * @param {Element} parentElement 
+ */
+export const cleanParentElement = (parentElement) => {
+    while(parentElement.firstChild){
+        let removedElement = parentElement.removeChild(parentElement.firstChild);
+        removedElement = null;
     }
 }
