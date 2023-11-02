@@ -67,6 +67,7 @@ input[type='button']:hover{
 }
 
 #reset-button{
+    margin-top: 10px;
     border:rgb(15, 139, 143) solid 2px;
     color: white;
     background-color: rgba(15, 139, 143, 0.753);

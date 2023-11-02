@@ -18,19 +18,19 @@ const currencyCharacter = "R";
  * @param {number} [inputDefinition.min] - The minimum value for the input field (optional).
  * @param {string[]} [inputDefinition.options] - An array of options {text, value} for 'numberList' input (optional).
  */
-const addInputField = (containerElement, inputDefinition, inputElementId = '') => {
+const addInputFieldByDefinition = (containerElement, inputDefinition, inputElementId = '') => {
     const { reference, text, dataType, validationType, properties } = inputDefinition;
     validation.validString(dataType);
     validation.validString(reference);
     validation.validString(text);
 
-    const inputFieldContainer = dom.createContainerWithLabel(text, reference, ['form-control']);
+    const inputFieldContainer = dom.createContainerWithLabel(text, inputElementId, ['form-control']);
     const inputElement =
         validationType === 'value' ? dom.createElement('input', {
             type: 'number',
             dataType: 'number',
             id: inputElementId,
-            min: properties.min, 
+            min: properties.min,
             value: 0,
             name: reference,
         })
@@ -59,14 +59,16 @@ const addInputField = (containerElement, inputDefinition, inputElementId = '') =
  *
  * @param {object[]} inputDefinitions - An array of input field definitions.
  */
-const initializeInputSection = (inputDefinitions) => {
+const initializeInputSection = (command) => {    
+    const inputDefinitions = command.getInputDefinitions();
+
     const inputSection = document.querySelector('#input-section');
     dom.cleanParentElement(inputSection);
     const inputFieldIds = []
-    for (const def of inputDefinitions) {
-        console.log('Input Definition: ', def);
-        const inputFieldId = def.reference + '-input'
-        addInputField(inputSection, def, inputFieldId);
+
+    for (const definition of inputDefinitions) {
+        const inputFieldId = definition.reference + '-input'
+        addInputFieldByDefinition(inputSection, definition, inputFieldId);
         inputFieldIds.push(inputFieldId);
     }
 
@@ -74,24 +76,22 @@ const initializeInputSection = (inputDefinitions) => {
         type: 'button',
         value: 'Submit',
         id: 'submit-button',
-        onclick: () => onSubmit(inputFieldIds),
+        onclick: () => handleSubmit(command),
     });
+
     const resetButton = dom.createElement('input', {
         type: 'button',
         value: 'Reset',
         id: 'reset-button',
-        onclick: () => handleResetClicked(inputDefinitions),
+        onclick: () => handleResetClicked(command),
     });
 
     inputSection.append(submitButton);
     inputSection.append(resetButton);
 }
 
-const handleResetClicked = (inputDefinitions) => {
-    const outputSection = document.querySelector('#output-section');
-    dom.cleanParentElement(outputSection);
-
-    initializeInputSection(inputDefinitions);
+const handleResetClicked = (command) => {
+    initializeCalculator(command);
 }
 
 /**
@@ -99,57 +99,34 @@ const handleResetClicked = (inputDefinitions) => {
  *
  * @param {object[]} inputDefinitions - An array of output field definitions.
  */
-const initializeOutputSection = (outputDefinitions) => {
+const initializeOutputSection = (command) => {
+    const outputDefinitions = command.getOutputDefinitions();
     const outputSection = document.querySelector('#output-section');
 
     dom.cleanParentElement(outputSection);
     for (const definition of outputDefinitions) {
-        const outputFieldContainer = dom.createContainerWithLabel(definition.text, definition.reference, ['result']);
-        const resultText = dom.createElement('p', { id: definition.reference + '-result' });
+        const outputFieldId = definition.reference + '-result';
+        const outputFieldContainer = dom.createContainerWithLabel(definition.text, outputFieldId, ['result']);
+        const resultText = dom.createElement('p', { id: outputFieldId});
 
         outputFieldContainer.append(resultText);
         outputSection.append(outputFieldContainer);
     }
 }
 
-/**
- * Initializes the calculator functionality.
- * Populates the period select with the given options and sets up form submission event handling.
- * 
- * @param {{text: string, value: any}[]} periodOptions : array list object filled with text and value of the option
- *      text: Text value of the option
- *      value: Value of the option
- * @param {{max: number, value: number}} taxRebatesBrackets - Tax rebates age backets
- *      max: The exclusive maximum value for the current tier
- *      value: The value to be added to the total for the current tier
- * @param {Object[]} taxBrackets - Tax brackets for calculations.
- *      max: The exclusive maximum value for the current tier
- *      value: The value to be added to the total for the current tier
- * @param {{percentage: number, ceiling: number}[]} uifOptions - options for calculating the UIF
- *      percentage: Percentage of the total income which will be calculated as UIF
- *      ceiling: Maximum value which can be calculated from monthlyIncome to UIF
- * @param {string} currencyCharacter - Character representing the currency symbol.
- */
-export const initializeCalculator = () => {
-    const inputDefinitions = calc.handleGetInputDefinitions();
-    initializeInputSection(inputDefinitions);
-    // initializeOutputSection(ui, outputDefinitions);
+
+export const initializeCalculator = (command) => {    
+    initializeInputSection(command);
+    initializeOutputSection(command);
 }
 
-/**
- * Displays the data for the tax calculation
- *      Removes the hidden attribute from the results container
- * 
- * @param {object} results | result data to display in all the output elements
- */
-const displayCalculationResults = (results) => {
-    const ui = document.querySelector('#calculator');
-    initializeOutputSection(results.outputDefinitions);
 
-    for (const { reference } of results.outputDefinitions) {
+const displayCalculationResults = (results, outputDefinitions) => {
+    const ui = document.querySelector('#calculator');
+    for (const { reference } of outputDefinitions) {
         const outputElementId = reference + '-result';
         const outputElement = document.querySelector(`#${outputElementId}`);
-        const value = results.outputData[reference];
+        const value = results[reference];
 
         outputElement.innerHTML = `${currencyCharacter} ${value.toFixed(2)}`;
     }
@@ -160,10 +137,13 @@ const displayCalculationResults = (results) => {
  *
  * @param {string[]} inputElementIds - An array of input element IDs.
  */
-const onSubmit = (inputElementIds) => {
+const handleSubmit = (command) => {
+    const inputDefinitions = command.getInputDefinitions();
+    const outputDefinitions = command.getOutputDefinitions();
     const inputData = {};
 
-    for (const id of inputElementIds) {
+    for (const {reference} of inputDefinitions) {
+        const id = reference + '-input'
         const inputElement = document.querySelector(`#${id}`);
         const name = inputElement.name;
         let value = inputElement.value;
@@ -174,9 +154,7 @@ const onSubmit = (inputElementIds) => {
 
         inputData[name] = value;
     }
-    console.log('Input data to send for calculation', inputData)
-    const results = calc.handleCalculateResults(inputData);
-    
-    console.log('Results to display: ', results)
-    displayCalculationResults(results);
+    const results = calc.handleCalculateResults(inputData, command);
+
+    displayCalculationResults(results, outputDefinitions);
 }

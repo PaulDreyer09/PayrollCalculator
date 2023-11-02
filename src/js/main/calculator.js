@@ -1,63 +1,12 @@
-import { taxRebatesBrackets, taxBrackets, uifOptions} from '../modules/config/south-african-tax-properties.js';
-import * as generalCommands from '../modules/commands/commands.js';
-import * as arithmaticCommands from '../modules/commands/arithmatic-commands.js';
-import * as ioDefinitionCommands from '../modules/commands/io-definition-commands.js';
-
-const commands = [
-    new ioDefinitionCommands.DefineInputCommand('employeeAge', 'Age', 'number', 'value', {min: 0}),
-    new ioDefinitionCommands.DefineInputCommand('grossSalary', 'Salary' , 'number', 'value', { min: 0,}),
-    new ioDefinitionCommands.DefineInputCommand('periodsPerAnnum', 'Periods', 'number', 'list', {
-        options: [
-            {
-                text: "Weekly",
-                value: 52
-            },
-            {
-                text: "Every 2 Weeks",
-                value: 26
-            },
-            {
-                text: "Monthly",
-                value: 12
-            },
-            {
-                text: "Yearly",
-                value: 1
-            }
-        ]
-    }),
-    
-    new generalCommands.SetValueCommand('monthsPerYear', 12),
-    new generalCommands.SetValuesCommand('uif', uifOptions),
-    new generalCommands.SetValueCommand('taxRebatesBrackets', taxRebatesBrackets),
-    new generalCommands.SetValueCommand('taxBrackets', taxBrackets),
-    
-    new arithmaticCommands.AnnualizeCommand('annualIncome', 'grossSalary', 'periodsPerAnnum'),
-    new arithmaticCommands.DeAnnualizeCommand('monthlyIncome', 'annualIncome', 'monthsPerYear'),
-    new arithmaticCommands.CalculateLimitedTaxationCommand('monthlyUif', 'monthlyIncome', 'uifRate', 'uifCeiling'),
-    new arithmaticCommands.AnnualizeCommand('annualUif', 'monthlyUif', 'monthsPerYear'),
-    new arithmaticCommands.DeAnnualizeCommand('deAnnualizedUif', 'annualUif', 'periodsPerAnnum'),
-    new arithmaticCommands.CalculateAddedTotalByTiersCommand('annualTaxRebates', 'taxRebatesBrackets', 'employeeAge'),
-    new arithmaticCommands.CalculateTaxByTiersCommand('annualGrossPaye', 'taxBrackets', 'annualIncome'),
-    new arithmaticCommands.FlooredDifferenceCommand('annualNetPaye', 'annualGrossPaye', 'annualTaxRebates'),
-    new arithmaticCommands.DeAnnualizeCommand('deAnnualizedNetPaye', 'annualNetPaye', 'periodsPerAnnum'),
-    new arithmaticCommands.SubtractCommand('netSalary', 'grossSalary', 'deAnnualizedUif', 'deAnnualizedNetPaye'),
-    
-    new ioDefinitionCommands.DefineOutputCommand('deAnnualizedNetPaye', 'PAYE' , 'number', 'value',),
-    new ioDefinitionCommands.DefineOutputCommand('deAnnualizedUif', 'UIF','number','value'),
-    new ioDefinitionCommands.DefineOutputCommand('netSalary', 'Net Salary', 'number', 'value',),
-];
+// import * as ioDefinitionCommands from '../modules/commands/io-definition-command.js';
 
 /**
  * Executes all the stored commands onto the provided data sheet.
  * @param {object} dataSheet - The data sheet containing input values.
  * @returns {object} An object containing PAYE, UIF, and Net Salary.
  */
-const executeCalculationCommands = (dataSheet) => {
-    for (const command of commands) {        
-        // console.log('Datasheet before next command execution', dataSheet)
-        dataSheet = command.execute(dataSheet);
-    }
+const executeCalculationCommands = (dataSheet, command) => {
+    dataSheet = command.execute(dataSheet);
 
     return dataSheet;
 };
@@ -68,15 +17,17 @@ const executeCalculationCommands = (dataSheet) => {
  * @param {Array} outputDefinitions - An array of output definitions.
  * @returns {object} An object containing output data.
  */
-const getDefinedOutputResultsFromDatasheet = (dataSheet, outputDefinitions) => {
-    const results = { outputDefinitions: outputDefinitions, outputData: {} };
+const getOutputResultsFromDatasheet = (dataSheet, command) => {
+    const outputDefinitions = command.getOutputDefinitions();
+    const results = {};
 
     for (const definition of outputDefinitions) {
         const reference = definition.reference;
         if (!reference in dataSheet)
             throw new Error(`Required output, ${reference}, was not found within the data sheet references.`);
-        results.outputData[reference] = dataSheet[reference];
+        results[reference] = dataSheet[reference];
     }
+
     return results;
 }
 
@@ -84,13 +35,8 @@ const getDefinedOutputResultsFromDatasheet = (dataSheet, outputDefinitions) => {
  * Get input definitions for the defined commands.
  * @returns {Array} An array of input definition objects.
  */
-export const handleGetInputDefinitions = () => {
-    const definitionsList = [];
-    for (const command of commands) {        
-        if (command instanceof ioDefinitionCommands.DefineInputCommand){
-            definitionsList.push(command.getDefinition());
-        };
-    }
+export const extractInputDefinitions = (command) => {
+    const definitionsList = command.getInputDefinitions();
     return definitionsList;
 }
 
@@ -98,20 +44,23 @@ export const handleGetInputDefinitions = () => {
  * Get output definitions for the defined commands.
  * @returns {Array} An array of output definition objects.
  */
-export const handleGetOutputDefinitions = () => {
-    const definitionsList = [];
-    for (const command of commands) {        
-        if (command instanceof ioDefinitionCommands.DefineOutputCommand){
-            definitionsList.push(command.getDefinition());
-        };
-    }
+export const extractOutputDefinitions = (command) => {
+    const definitionsList = command.getOutputDefinitions();
     return definitionsList;
 }
 
-export const filterInputDataToDefinitions = (inputData, inputDefinitions) => {
+/**
+ * Filter a given object of input data and return only the values which have corresponding keys of a provided definitions list
+ * 
+ * @param {object} inputData input data from the client, which will be filtered to only the keys that inputDefinitio
+ * @param {Array} inputDefinitions Array of inputDefinition objects
+ * @returns {object} object with the same key:value data, filtered to only inputDefinitions' keys, where applicable
+ */
+export const filterInputDataToDefinitions = (inputData, commands) => {
+    const inputDefinitions = extractInputDefinitions(commands);
     const filteredData = {}
-    for(const {reference} of inputDefinitions){
-        if(inputData.hasOwnProperty(reference)){
+    for (const { reference } of inputDefinitions) {
+        if (inputData.hasOwnProperty(reference)) {
             filteredData[reference] = inputData[reference]
         } else {
             throw new Error(`No expected input data found with name: ${reference}`);
@@ -125,25 +74,22 @@ export const filterInputDataToDefinitions = (inputData, inputDefinitions) => {
  * @param {object} inputData - The validated input data.
  * @returns {object} An object containing output results.
  */
-export const handleCalculateResults = (inputData) => {
-    const inputDefinitions = handleGetInputDefinitions();
-    const outputDefinitions = handleGetOutputDefinitions();
-
-    let dataSheet = filterInputDataToDefinitions(inputData, inputDefinitions);
+export const handleCalculateResults = (inputData, commands) => {
+    let dataSheet = filterInputDataToDefinitions(inputData, commands);
+    let result = {};
 
     try {
-        executeCalculationCommands(dataSheet)
-    } catch(error){
+        executeCalculationCommands(dataSheet, commands)
+    } catch (error) {
         throw error;
         //placeholder before async implementation.
     }
 
-    let result = {};
-    try{
-        result = getDefinedOutputResultsFromDatasheet(dataSheet, outputDefinitions);
+    try {
+        result = getOutputResultsFromDatasheet(dataSheet, commands);
     } catch (error) {
         throw error;
-        //Placeholder for returning error response to front end
+        //placeholder before async implementation.
     }
 
     return result;

@@ -1,6 +1,6 @@
 import * as calc from '../payroll-functions/calculation-functions.js';
 import * as validation from '../utils/validation.js';
-import {Command} from './commands.js';
+import Command from './command.js';
 
 /**
  * @class
@@ -8,7 +8,7 @@ import {Command} from './commands.js';
  * @param {number} resultReference - Reference to the result position in the values array.
  * @param {...number} inputReferences - References to the operands' positions in the values array.
  */
-export class ArithmeticCommand extends Command {
+export default class ArithmeticCommand extends Command {
     constructor(func, resultReference, ...inputReferences) {
         super(...inputReferences)
         this.func = func;
@@ -166,9 +166,9 @@ export class FlooredDifferenceCommand extends ArithmeticCommand {
  * @param {RateReference} rateReference - Reference to the tax rate.
  * @param {CeilingReference} ceilingReference - Reference to the ceiling value for taxation.
  */
-export class CalculateLimitedTaxationCommand extends ArithmeticCommand {
+export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
     constructor(resultReference, inputValueReference, rateReference, ceilingReference) {
-        super(calc.calculateLimitedTaxation, resultReference, inputValueReference, rateReference, ceilingReference);
+        super(calc.calculateLimitedPercentage, resultReference, inputValueReference, rateReference, ceilingReference);
         this.name = 'Calculate Limited Taxation';
     }
 }

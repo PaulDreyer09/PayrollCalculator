@@ -127,7 +127,7 @@ export const deAnnualize = (value, newPeriodsPerAnnum) =>
  * @param {number} ceiling - The maximum tax amount that can be applied.
  * @returns {number} The calculated tax amount, limited by the ceiling if applicable.
  */
-export const calculateLimitedTaxation = (value, rate, ceiling) => {
+export const calculateLimitedPercentage = (value, rate, ceiling) => {
     const applicableValue = lesserOf(ceiling, value);
     const percentage = makePercentage(rate);
     const result = takePercentage(applicableValue, percentage);
@@ -203,7 +203,7 @@ export const calculateTaxByCurrentTier = (total, currentTier, minValue, inputVal
     const { max, rate } = currentTier;
     const amountLeftToTax = flooredDifference(validation.validNumber(inputValue), validation.validNumber(minValue));
     const maxTaxableAmount = validation.validNumberOrInfinite(max) !== Infinity ? subtract(max, minValue) : amountLeftToTax;
-    const taxFromCurrentBracket = calculateLimitedTaxation(amountLeftToTax, validation.validNumber(rate), maxTaxableAmount);
+    const taxFromCurrentBracket = calculateLimitedPercentage(amountLeftToTax, validation.validNumber(rate), maxTaxableAmount);
     return sum(total, taxFromCurrentBracket);
 };
 

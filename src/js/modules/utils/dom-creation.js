@@ -28,10 +28,10 @@ export const createElement = (elementType, attributes = {}, classList = [], inne
  * @param {string[]} classList - An array of class names to add to the container element.
  * @returns {HTMLElement} - The container element with the label.
  */
-export const createContainerWithLabel = (labelText, forName = '', classList) => {
+export const createContainerWithLabel = (labelText, inputFieldId = '', classList) => {
     const containerElement = createElement('div', {}, classList);
-    const label = createElement('label', { for: forName }, [], labelText);
-
+    const label = createElement('label', {}, [], labelText);
+    label.setAttribute('for', inputFieldId);
     containerElement.append(label);
     return containerElement;
 }

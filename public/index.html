@@ -7,10 +7,9 @@
     <link rel="stylesheet" href="./css/styles.css">
     <script type="module" >
         import * as UI from '../src/js/ui/calculatorUI.js';
-        import * as test from '../src/js/modules/utils/string-manipulation.js';
-        document.test = test;
+        import * as commands from '../src/js/modules/config/sa.js';
 
-        UI.initializeCalculator();
+        UI.initializeCalculator(commands.getCommands());
     </script>
 </head>
 <body>
