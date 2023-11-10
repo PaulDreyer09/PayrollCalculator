@@ -1,77 +1,26 @@
-// import * as calc from '../payroll-functions/south-african-tax-calculations.js';
-import * as validation from '../modules/utils/validation.js';
 import * as dom from '../modules/utils/dom-creation.js';
-import * as calc from '../main/calculator.js';
 import * as visitors from '../modules/commands/visitors/visitor.js';
 
 const currencyCharacter = "R";
 
 /**
- * Adds an input field to the specified container element.
- *
- * @param {HTMLElement} containerElement - The container element to which the input field will be added.
- * @param {object} inputDefinition - An object describing the input field.
- * @param {string} [inputElementId=''] - The ID for the input element (optional).
- * 
- * @param {string} inputDefinition.name - The name of the input field.
- * @param {string} inputDefinition.text - The label text for the input field.
- * @param {string} inputDefinition.dataType - The data type of the input field ('number' or 'numberList').
- * @param {number} [inputDefinition.min] - The minimum value for the input field (optional).
- * @param {string[]} [inputDefinition.options] - An array of options {text, value} for 'numberList' input (optional).
+ * Reinitializes the calculator UI
+ * @param {Command} command - The command that defines the structure of the calculator
  */
-const addInputFieldByDefinition = (containerElement, inputDefinition, inputElementId = '') => {
-    const { reference, text, dataType, validationType, properties } = inputDefinition;
-    validation.validString(dataType);
-    validation.validString(reference);
-    validation.validString(text);
-
-    const inputFieldContainer = dom.createContainerWithLabel(text, inputElementId, ['form-control']);
-    const inputElement =
-        validationType === 'value' ? dom.createElement('input', {
-            type: 'number',
-            dataType: 'number',
-            id: inputElementId,
-            min: properties.min,
-            value: 0,
-            name: reference,
-        })
-            : validationType === 'list' ? dom.createElement('select', {
-                dataType: 'number',
-                id: inputElementId,
-                name: reference
-            })
-                : false
-
-    if (!inputElement) {
-        throw new Error(`Invalid dataType has been provided in input definition for ${reference}(${dataType})`);
-    }
-
-    if (validationType === 'list' && 'options' in properties) {
-        dom.initializeSelect(properties.options, inputElement);
-    }
-
-    inputFieldContainer.append(inputElement);
-    containerElement.append(inputFieldContainer);
+const handleResetClicked = (command) => {
+    initializeCalculator(command);
 }
-
 
 /**
  * Initializes the input section of the calculator UI, which is a container element with ID: 'input-section'.
  *
  * @param {object[]} inputDefinitions - An array of input field definitions.
  */
-const initializeInputSection = (command) => {    
-    const inputDefinitions = command.getInputDefinitions();
-
+const initializeInputSection = (visitor, command) => {    
     const inputSection = document.querySelector('#input-section');
     dom.cleanParentElement(inputSection);
-    const inputFieldIds = []
 
-    for (const definition of inputDefinitions) {
-        const inputFieldId = definition.reference + '-input'
-        addInputFieldByDefinition(inputSection, definition, inputFieldId);
-        inputFieldIds.push(inputFieldId);
-    }
+    inputSection.append(visitor.inputContainerElement);
 
     const submitButton = dom.createElement('input', {
         type: 'button',
@@ -87,80 +36,87 @@ const initializeInputSection = (command) => {
         onclick: () => handleResetClicked(command),
     });
 
-    inputSection.append(submitButton);
-    inputSection.append(resetButton);
-}
-
-const handleResetClicked = (command) => {
-    initializeCalculator(command);
+    inputSection.append(submitButton, resetButton);
 }
 
 /**
- * Initializes the output section of the calculator UI, which is a container element with ID: 'output-section'.
+ * Initializes the output section of the calculator UI, which is a container element with id: 'output-section'.
  *
- * @param {object[]} inputDefinitions - An array of output field definitions.
+ * @param {IODomBuilderVisitor} visitor - The visitor that builds the UI
  */
-const initializeOutputSection = (command) => {
-    // const outputDefinitions = command.getOutputDefinitions();
-    const visitor = command.accept(new visitors.IODomBuilderVisitor());
-    // console.log(visitor.outputDefinitions);
-    // console.log(outputDefinitions);
-    const outputDefinitions = visitor.outputDefinitions;
-
+const initializeOutputSection = (visitor) => {
     const outputSection = document.querySelector('#output-section');
-
     dom.cleanParentElement(outputSection);
-    for (const definition of outputDefinitions) {
-        const outputFieldId = definition.reference + '-result';
-        const outputFieldContainer = dom.createContainerWithLabel(definition.text, outputFieldId, ['result']);
-        const resultText = dom.createElement('p', { id: outputFieldId});
 
-        outputFieldContainer.append(resultText);
-        outputSection.append(outputFieldContainer);
-    }
+    outputSection.append(visitor.outputContainerElement);
 }
 
-
+/**
+ * Initialize the calculators input and output fields depending on the input and output definitions containted in the command input
+ *  
+ * @param {*} command - The command containing the logic of what will be calculated.
+ */
 export const initializeCalculator = (command) => {    
-    initializeInputSection(command);
-    initializeOutputSection(command);
+    const visitor = command.accept(new visitors.IODomBuilderVisitor());
+
+    initializeInputSection(visitor, command);
+    initializeOutputSection(visitor);
 }
 
+/**
+ * 
+ * @param {object} results -  
+ * @param {Array<DefineOutputCommand>} outputDefinitions - 
+ */
+const displayCalculationResults = (results, command) => {
+    return command.accept(new visitors.OutputDisplayerVisitor(results, currencyCharacter))
+}
 
-const displayCalculationResults = (results, outputDefinitions) => {
-    const ui = document.querySelector('#calculator');
-    for (const { reference } of outputDefinitions) {
-        const outputElementId = reference + '-result';
-        const outputElement = document.querySelector(`#${outputElementId}`);
-        const value = results[reference];
-
-        outputElement.innerHTML = `${currencyCharacter} ${value.toFixed(2)}`;
+/**
+ * Filter a given object of input data and return only the values which have corresponding keys of a provided definitions list
+ * 
+ * @param {object} inputData input data from the client, which will be filtered to only the keys that inputDefinitio
+ * @param {Array} inputDefinitions Array of inputDefinition objects
+ * @returns {object} object with the same key:value data, filtered to only inputDefinitions' keys, where applicable
+ */
+export const filterInputDataToDefinitions = (inputData, inputDefinitions) => {
+    const filteredData = {}
+    for (const { reference } of inputDefinitions) {
+        if (inputData.hasOwnProperty(reference)) {
+            filteredData[reference] = inputData[reference]
+        } else {
+            throw new Error(`No expected input data found with name: ${reference}`);
+        }
     }
+    return filteredData;
+}
+
+/**
+ * Calculate results based on validated input data.
+ * @param {object} inputData - The validated input data.
+ * @param {Command} - The command to execute calculation on the input data
+ * @returns {object} An object containing output results.
+ */
+export const handleCalculateResults = (inputData, command,) => {
+    return command.execute(inputData);
+}
+
+const getInputData = (command) => {
+    const inputCollectionVisitor = command.accept(new visitors.InputCollectorVisitor());
+
+    return filterInputDataToDefinitions(
+        {...inputCollectionVisitor.collectedInputData}, 
+        inputCollectionVisitor.inputDefinitions
+    ); 
 }
 
 /**
  * Handles the form submission event and calculates the results.
- *
- * @param {string[]} inputElementIds - An array of input element IDs.
+ * @param {IODomBuilderVisitor} visitor - The visitor containing the input and output definitions
+ * @param {Command} command - The command to be executed to calculate the results.
  */
 const handleSubmit = (command) => {
-    const inputDefinitions = command.getInputDefinitions();
-    const outputDefinitions = command.getOutputDefinitions();
-    const inputData = {};
-
-    for (const {reference} of inputDefinitions) {
-        const id = reference + '-input'
-        const inputElement = document.querySelector(`#${id}`);
-        const name = inputElement.name;
-        let value = inputElement.value;
-
-        if ('dataType' in inputElement && inputElement['dataType'] === 'number') {
-            value = parseFloat(value);
-        }
-
-        inputData[name] = value;
-    }
-    const results = calc.handleCalculateResults(inputData, command);
-
-    displayCalculationResults(results, outputDefinitions);
+    const dataSheet = getInputData(command);
+    handleCalculateResults(dataSheet, command);
+    displayCalculationResults(dataSheet, command);
 }

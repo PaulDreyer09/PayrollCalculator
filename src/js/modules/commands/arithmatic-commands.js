@@ -15,6 +15,10 @@ export default class ArithmeticCommand extends Command {
         this.resultReference = resultReference;
     }
 
+    accept(visitor){
+        visitor.visitArithmeticCommand(this);
+    }
+
     execute(values) {
         const inputValues = [];
         for (const reference of this.inputReferences) {

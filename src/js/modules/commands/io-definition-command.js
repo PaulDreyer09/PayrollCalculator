@@ -12,16 +12,16 @@ export default class IODefinitionCommand extends Command {
         this.commandName = commandName;
     };
 
-    //DELETE
-    getDefinition() {
-        return {
-            reference: this.reference,
-            text: this.text,
-            dataType: this.dataType,
-            validationType: this.validationType,
-            properties: this.properties,
-        }
-    }
+    // //DELETE
+    // getDefinition() {
+    //     return {
+    //         reference: this.reference,
+    //         text: this.text,
+    //         dataType: this.dataType,
+    //         validationType: this.validationType,
+    //         properties: this.properties,
+    //     }
+    // }
 
     validateDataType(inputValue) {
         switch (this.dataType) {
