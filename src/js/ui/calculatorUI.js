@@ -2,6 +2,7 @@
 import * as validation from '../modules/utils/validation.js';
 import * as dom from '../modules/utils/dom-creation.js';
 import * as calc from '../main/calculator.js';
+import * as visitors from '../modules/commands/visitors/visitor.js';
 
 const currencyCharacter = "R";
 
@@ -100,7 +101,12 @@ const handleResetClicked = (command) => {
  * @param {object[]} inputDefinitions - An array of output field definitions.
  */
 const initializeOutputSection = (command) => {
-    const outputDefinitions = command.getOutputDefinitions();
+    // const outputDefinitions = command.getOutputDefinitions();
+    const visitor = command.accept(new visitors.IODomBuilderVisitor());
+    // console.log(visitor.outputDefinitions);
+    // console.log(outputDefinitions);
+    const outputDefinitions = visitor.outputDefinitions;
+
     const outputSection = document.querySelector('#output-section');
 
     dom.cleanParentElement(outputSection);

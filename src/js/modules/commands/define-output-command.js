@@ -6,6 +6,11 @@ export default class DefineOutputCommand extends IODefinitionCommand {
     };
 
     getOutputDefinitions(){
-        return [this, ...super.getOutputDefinitions()];
+        return [this];
+    }
+
+    accept(visitor){
+        visitor.visitDefineOutputCommand(this);
+        return visitor;
     }
 }

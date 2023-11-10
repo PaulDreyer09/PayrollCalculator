@@ -6,6 +6,10 @@ export default class DefineInputCommand extends IODefinitionCommand {
     };
 
     getInputDefinitions(){
-        return [this, ...super.getInputDefinitions()];
+        return [this];
+    }
+
+    accept(visitor){
+        visitor.visitDefineInputCommand(this);
     }
 }

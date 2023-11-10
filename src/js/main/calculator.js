@@ -6,9 +6,7 @@
  * @returns {object} An object containing PAYE, UIF, and Net Salary.
  */
 const executeCalculationCommands = (dataSheet, command) => {
-    dataSheet = command.execute(dataSheet);
-
-    return dataSheet;
+    return command.execute(dataSheet);
 };
 
 /**
@@ -74,23 +72,11 @@ export const filterInputDataToDefinitions = (inputData, commands) => {
  * @param {object} inputData - The validated input data.
  * @returns {object} An object containing output results.
  */
-export const handleCalculateResults = (inputData, commands) => {
-    let dataSheet = filterInputDataToDefinitions(inputData, commands);
-    let result = {};
+export const handleCalculateResults = (inputData, command) => {
+    // const dataSheet = filterInputDataToDefinitions(inputData, command);
+    // let result = {};
+    // dataSheet = command.execute(dataSheet);
+    // result = getOutputResultsFromDatasheet(dataSheet, command);
 
-    try {
-        executeCalculationCommands(dataSheet, commands)
-    } catch (error) {
-        throw error;
-        //placeholder before async implementation.
-    }
-
-    try {
-        result = getOutputResultsFromDatasheet(dataSheet, commands);
-    } catch (error) {
-        throw error;
-        //placeholder before async implementation.
-    }
-
-    return result;
+    return command.execute(filterInputDataToDefinitions(inputData, command));
 }
