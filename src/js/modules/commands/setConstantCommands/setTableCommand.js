@@ -1,6 +1,6 @@
-import Command from "./command.js";
+import {Command} from "../command.js";
 
-export default class SetTableCommand extends Command {
+export class SetTableCommand extends Command {
     constructor(inputReference, tableData) {
         super();
         this.inputReference = inputReference;
@@ -11,4 +11,9 @@ export default class SetTableCommand extends Command {
         this.setConstant(dataSheet, this.inputReference, this.tableData)
         return dataSheet;
     }
+
+    accept(visitor) {
+        visitor.visitSetTableCommand(this);
+    }
 }
+

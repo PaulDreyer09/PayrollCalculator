@@ -4,7 +4,7 @@
  * @param {number} resultReference - Reference to the result position in the dataSheet array.
  * @param {...number} inputReferences - References to the operands' positions in the dataSheet array.
 */
-export default class Command {
+export class Command {
     constructor(...inputReferences) {
         this.inputReferences = [...inputReferences];
         
@@ -16,14 +16,6 @@ export default class Command {
      * @param {Command} command Command to be added to the subCommand array
      */
     addSubCommand(command) {
-    }
-
-    getInputDefinitions() {
-        return [];
-    }
-
-    getOutputDefinitions() {
-        return [];
     }
 
     /**
@@ -62,8 +54,7 @@ export default class Command {
     }
 
     accept(visitor) {
-        // throw new Error('The accept() method needs to be implemented in the subclass.')
-        return visitor;
+        throw new Error('The accept() method needs to be implemented in the subclass.');
     }
 }
 

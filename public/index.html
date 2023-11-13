@@ -7,9 +7,13 @@
     <link rel="stylesheet" href="./css/styles.css">
     <script type="module" >
         import * as UI from '../src/js/ui/calculatorUI.js';
-        import * as commands from '../src/js/modules/config/sa.js';
+        import * as commandsManager from '../src/js/modules/config/sa.js';
+        import {ConsolePrettyPrinterVisitor} from '../src/js/modules/commands/index.js';
 
-        UI.initializeCalculator(commands.getCommands());
+        const commands = commandsManager.getCommands()
+        commands.accept(new ConsolePrettyPrinterVisitor());
+        UI.initializeCalculator(commands);
+
     </script>
 </head>
 <body>

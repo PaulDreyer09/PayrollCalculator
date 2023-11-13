@@ -1,7 +1,7 @@
-import Command from "./command.js";
-import * as validation from '../utils/validation.js';
+import {Command} from "../command.js";
+import * as validation from '../../utils/validation.js';
 
-export default class IODefinitionCommand extends Command {
+export class IODefinitionCommand extends Command {
     constructor(reference, text, dataType, validationType, properties, commandName) {
         super();
         this.reference = reference;
@@ -11,17 +11,6 @@ export default class IODefinitionCommand extends Command {
         this.properties = properties == null ? {} : properties;
         this.commandName = commandName;
     };
-
-    // //DELETE
-    // getDefinition() {
-    //     return {
-    //         reference: this.reference,
-    //         text: this.text,
-    //         dataType: this.dataType,
-    //         validationType: this.validationType,
-    //         properties: this.properties,
-    //     }
-    // }
 
     validateDataType(inputValue) {
         switch (this.dataType) {

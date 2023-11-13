@@ -1,6 +1,6 @@
-import Command from "./command.js";
+import {Command} from "../command.js";
 
-export default class SetValueCommand extends Command {
+export class SetValueCommand extends Command {
     constructor(inputReference, inputValue) {
         super();
         this.inputReference = inputReference;
@@ -10,6 +10,10 @@ export default class SetValueCommand extends Command {
     execute(dataSheet) {
         this.setConstant(dataSheet, this.inputReference, this.inputValue)
         return dataSheet;
+    }
+
+    accept(visitor) {
+        visitor.visitSetValueCommand(this);
     }
 }
 
