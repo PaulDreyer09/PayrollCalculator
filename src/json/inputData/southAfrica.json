@@ -1,0 +1,81 @@
+{
+  "taxRebatesBrackets": [
+    {
+      "max": 65,
+      "value": 17235
+    },
+    {
+      "max": 75,
+      "value": 9444
+    },
+    {
+      "max": 1.7976931348623157e+308,
+      "value": 3145
+    }
+  ],
+  "taxBrackets": [
+    {
+      "max": 237100,
+      "rate": 18
+    },
+    {
+      "max": 370500,
+      "rate": 26
+    },
+    {
+      "max": 512800,
+      "rate": 31
+    },
+    {
+      "max": 673000,
+      "rate": 36
+    },
+    {
+      "max": 857900,
+      "rate": 39
+    },
+    {
+      "max": 1817000,
+      "rate": 41
+    },
+    {
+      "max": 1.7976931348623157e+308,
+      "rate": 45
+    }
+  ],
+  "uifOptions": {
+    "rate": 1,
+    "ceiling": 17712
+  },
+  "inputList": [
+    {
+      "name": "age",
+      "type": "number",
+      "labelString": "Age"
+    },
+    {
+      "name": "salary",
+      "type": "number",
+      "labelString": "Salary"
+    },
+    {
+      "name": "periodsPerAnnum",
+      "type": "select",
+      "labelString": "Period"
+    }
+  ],
+  "outputList": [
+    {
+      "name": "deAnnualizedNetPaye",
+      "labelString": "PAYE"
+    },
+    {
+      "name": "deAnnualizedUif",
+      "labelString": "UIF"
+    },
+    {
+      "name": "netSalary",
+      "labelString": "Net Salary"
+    }
+  ]
+}

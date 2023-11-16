@@ -14,6 +14,19 @@ export class AddCommand extends ArithmeticCommand {
     this.name = "Add";
   }
 
+  /**
+   * Creates an instance of the class using the key-value pairs insinde params
+   * @param {object} params - Object containing the parameters to create an instance of the class
+   * @returns {AddCommand}
+   */
+  static factory(params) {
+    return new AddCommand(params.resultReference, ...params.inputReferences);
+  }
+
+  /**
+   * Accept a Visitor object to call the opproptiate visit method for the command 
+   * @param {Visitor} visitor 
+   */
   accept(visitor) {
     visitor.visitAddCommand(this);
   }
@@ -30,6 +43,15 @@ export class SubtractCommand extends ArithmeticCommand {
   constructor(resultReference, ...inputReferences) {
     super(calc.subtract, resultReference, ...inputReferences);
     this.name = "Subtract";
+  }
+
+    /**
+   * Creates an instance of the class using the key-value pairs insinde params
+   * @param {object} params - Object containing the parameters to create an instance of the class
+   * @returns {SubtractCommand}
+   */
+  static factory(params) {
+    return new SubtractCommand(params.resultReference, ...params.inputReferences);
   }
 
   accept(visitor) {
@@ -50,6 +72,15 @@ export class MultiplyCommand extends ArithmeticCommand {
     this.name = "Multiply;";
   }
 
+    /**
+   * Creates an instance of the class using the key-value pairs insinde params
+   * @param {object} params - Object containing the parameters to create an instance of the class
+   * @returns {MultiplyCommand}
+   */
+  static factory(params) {
+    return new MultiplyCommand(params.resultReference, ...params.inputReferences);
+  }
+
   accept(visitor) {
     visitor.visitMultiplyCommand(this);
   }
@@ -66,6 +97,15 @@ export class DivideCommand extends ArithmeticCommand {
   constructor(resultReference, ...inputReferences) {
     super(calc.divide, resultReference, ...inputReferences);
     this.name = "Divide";
+  }
+
+    /**
+   * Creates an instance of the class using the key-value pairs insinde params
+   * @param {object} params - Object containing the parameters to create an instance of the class
+   * @returns {AddCommand}
+   */
+  static factory(params) {
+    return new DivideCommand(params.resultReference, ...params.inputReferences);
   }
 
   accept(visitor) {
@@ -87,6 +127,15 @@ export class AnnualizeCommand extends ArithmeticCommand {
     this.name = "Annualize";
   }
 
+  /**
+   * Creates an instance of the class using the key-value pairs insinde params
+   * @param {object} params - Object containing the parameters to create an instance of the class
+   * @returns {AnnualizeCommand}
+   */
+  static factory(params) {
+    return new AnnualizeCommand(params.resultReference, params.inputValueReference, params.periodsPerAnnumReference);
+  }
+
   get inputValueReference() {
     return this.inputReferences[0];
   }
@@ -95,6 +144,10 @@ export class AnnualizeCommand extends ArithmeticCommand {
     return this.inputReferences[1];
   }
 
+    /**
+   * Accept a Visitor object to call the opproptiate visit method for the command 
+   * @param {Visitor} visitor 
+   */
   accept(visitor) {
     visitor.visitAnnualizeCommand(this);
   }
@@ -114,6 +167,15 @@ export class DeAnnualizeCommand extends ArithmeticCommand {
     this.name = "DE-Annualize";
   }
 
+  /**
+   * Creates an instance of the class using the key-value pairs insinde params
+   * @param {object} params - Object containing the parameters to create an instance of the class
+   * @returns {DeAnnualizeCommand}
+   */
+  static factory(params) {
+    return new DeAnnualizeCommand(params.resultReference, params.inputValueReference, params.newPeriodsPerAnnumReference);
+  }
+
   get inputValueReference() {
     return this.inputReferences[0];
   }
@@ -122,6 +184,10 @@ export class DeAnnualizeCommand extends ArithmeticCommand {
     return this.inputReferences[1];
   }
 
+    /**
+   * Accept a Visitor object to call the opproptiate visit method for the command 
+   * @param {Visitor} visitor 
+   */
   accept(visitor) {
     visitor.visitDeAnnualizeCommand(this);
   }
@@ -140,6 +206,19 @@ export class LesserOfCommand extends ArithmeticCommand {
     this.name = "Lesser Of";
   }
 
+  /**
+   * Creates an instance of the class using the key-value pairs insinde params
+   * @param {object} params - Object containing the parameters to create an instance of the class
+   * @returns {LesserOfCommand}
+   */
+  static factory(params) {
+    return new LesserOfCommand(params.resultReference, ...params.inputReferences);
+  }
+
+    /**
+   * Accept a Visitor object to call the opproptiate visit method for the command 
+   * @param {Visitor} visitor 
+   */
   accept(visitor) {
     visitor.visitLesserOfCommand(this);
   }
@@ -158,6 +237,19 @@ export class FlooredDifferenceCommand extends ArithmeticCommand {
     this.name = "Floored Difference";
   }
 
+  /**
+   * Creates an instance of the class using the key-value pairs insinde params
+   * @param {object} params - Object containing the parameters to create an instance of the class
+   * @returns {FlooredDifferenceCommand}
+   */
+  static factory(params) {
+    return new FlooredDifferenceCommand(params.resultReference, ...params.inputReferences);
+  }
+
+    /**
+   * Accept a Visitor object to call the opproptiate visit method for the command 
+   * @param {Visitor} visitor 
+   */
   accept(visitor) {
     visitor.visitFlooredDifferenceCommand(this);
   }
@@ -178,6 +270,15 @@ export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
     this.name = "Calculate Limited Taxation";
   }
 
+  /**
+   * Creates an instance of the class using the key-value pairs insinde params
+   * @param {object} params - Object containing the parameters to create an instance of the class
+   * @returns {CalculateLimitedPercentageCommand}
+   */
+  static factory(params) {
+    return new CalculateLimitedPercentageCommand(params.resultReference, params.inputValueReference, params.rateReference, params.ceilingReference);
+  }
+
   get inputValueReference() {
     return this.inputReferences[0];
   }
@@ -188,11 +289,11 @@ export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
     return this.inputReferences[2];
   }
 
+    /**
+   * Accept a Visitor object to call the opproptiate visit method for the command 
+   * @param {Visitor} visitor 
+   */
   accept(visitor) {
     visitor.visitCalculateLimitedPercentageCommand(this);
   }
 }
-
-
-
-

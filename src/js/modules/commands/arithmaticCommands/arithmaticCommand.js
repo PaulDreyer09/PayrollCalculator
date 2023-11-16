@@ -10,6 +10,7 @@ import {Command} from '../command.js';
 export class ArithmeticCommand extends Command {
   constructor(func, resultReference, ...inputReferences) {
       super(...inputReferences)
+      this.name = null;
       this.func = func;
       this.resultReference = resultReference;
   }
@@ -19,7 +20,6 @@ export class ArithmeticCommand extends Command {
       for (const reference of this.inputReferences) {
           inputValues.push(this.getKnownValidNumber(values, reference));
       }
-
       const result = this.func(...inputValues);
 
       return this.setConstant(values, this.resultReference, result);

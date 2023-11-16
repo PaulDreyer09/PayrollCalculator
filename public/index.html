@@ -6,14 +6,9 @@
     <title>Payroll Calculator</title>
     <link rel="stylesheet" href="./css/styles.css">
     <script type="module" >
-        import * as UI from '../src/js/ui/calculatorUI.js';
-        import * as commandsManager from '../src/js/modules/config/sa.js';
-        import {ConsolePrettyPrinterVisitor} from '../src/js/modules/commands/index.js';
+        import * as app from '../src/js/main/app.js';
 
-        const commands = commandsManager.getCommands()
-        commands.accept(new ConsolePrettyPrinterVisitor());
-        UI.initializeCalculator(commands);
-
+        await app.run();
     </script>
 </head>
 <body>

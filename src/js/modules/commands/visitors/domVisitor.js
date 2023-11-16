@@ -1,4 +1,5 @@
 import * as dom from "../../utils/domManipulation.js";
+import { DefineInputCommand } from "../ioCommands/IODefinitionCommandTypes.js";
 import { Visitor } from "./visitor.js";
 
 export class IOVisitor extends Visitor {
@@ -8,18 +9,36 @@ export class IOVisitor extends Visitor {
     this.outputDefinitions = [];
   }
 
+  /**
+   * Adds a "-input" prefix to the given reference string
+   * @param {string} reference 
+   * @returns 
+   */
   _toInputFieldId(reference) {
     return reference + "-input";
   }
 
+  /**
+   * Adds a "-result" prefix to the given reference string
+   * @param {string} reference 
+   * @returns 
+   */
   _toOutputFieldId(reference) {
     return reference + "-result";
   }
 
+  /**
+   * Adds the visited DefineInputCommand to the inputDefinitions collection
+   * @param {DefineInputCommand} command 
+   */
   visitDefineInputCommand(command) {
     this.inputDefinitions.push(command);
   }
 
+    /**
+   * Adds the visited DefineOutputCommand to the outputDefinitions collection
+   * @param {DefineOutputCommand} command 
+   */
   visitDefineOutputCommand(command) {
     this.outputDefinitions.push(command);
   }
@@ -31,6 +50,10 @@ export class InputCollectorVisitor extends IOVisitor {
     this.collectedInputData = {};
   }
 
+  /**
+   * Gets the input value from the input element from the dom
+   * @param {string} inputReference - The reference to the input to collect 
+   */
   _collectInputValueFromDom(inputReference) {
     const id = this._toInputFieldId(inputReference);
     const inputElement = document.querySelector(`#${id}`);

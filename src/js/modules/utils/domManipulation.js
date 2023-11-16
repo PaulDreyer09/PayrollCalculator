@@ -69,7 +69,6 @@ export const cleanParentElement = (parentElement) => {
 };
 
 export const resetElementNode = (element) => {
-  console.log(element, element.type);
   switch (element.type) {
     case "text":
     case "password":
@@ -79,7 +78,6 @@ export const resetElementNode = (element) => {
       break;
     }
     case "select-one": {
-      console.log("Select");
       element.selectedIndex = 0;
       break;
     }

@@ -34,19 +34,19 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
   //Composite Commands
 
   enterCommandList(commandList) {
-    console.log("Starting Command List:", commandList.name);
+    console.log(`${this.currentIndentString}Start Command List: ${commandList.listName}`);
     this.indentLevel++;
     this._updateIndentValues();
   }
 
   exitCommandList(commandList) {
-    console.log("End Command List:", commandList.name);
     this.indentLevel--;
     this._updateIndentValues();
+    console.log(`${this.currentIndentString}End Command List: ${commandList.listName}`);
   }
 
   //Set Constant Commands
-  
+
   visitSetTableCommand(command) {
     console.log(`${this.currentIndentString}Setting table data. Reference: ${command.inputReference}`);
     console.table(command.tableData);
@@ -93,12 +93,11 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
     console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
     console.log(`${this.infoIndentString}Input references to add together: ${command.inputReferences.join(", ")}`);
   }
-
   visitSubtractCommand(command) {
     console.log(`${this.currentIndentString}Subtract Command.`);
     console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputReferences.shift()}`);
-    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.join(", ")}`);
+    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputReferences[0]}`);
+    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.slice(1).join(", ")}`);
   }
 
   visitMultiplyCommand(command) {
@@ -110,8 +109,8 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
   visitDivideCommand(command) {
     console.log(`${this.currentIndentString}Divide Command.`);
     console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputReferences.shift()}`);
-    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.join(", ")}`);
+    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputReferences[0]}`);
+    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.slice(1).join(", ")}`);
   }
 
   visitAnnualizeCommand(command) {
@@ -137,8 +136,8 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
   visitFlooredDifferenceCommand(command) {
     console.log(`${this.currentIndentString}Floored Difference Command.`);
     console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputReferences.shift()}`);
-    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.join(", ")}`);
+    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputReferences[0]}`);
+    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.slice(1).join(", ")}`);
   }
 
   visitCalculateLimitedPercentageCommand(command) {
