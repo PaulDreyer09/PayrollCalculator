@@ -1,5 +1,5 @@
 {
-  "taxRebatesBrackets": [
+  "tax_rebates_brackets": [
     {
       "max": 65,
       "value": 17235
@@ -13,7 +13,7 @@
       "value": 3145
     }
   ],
-  "taxBrackets": [
+  "tax_brackets": [
     {
       "max": 237100,
       "rate": 18
@@ -43,39 +43,8 @@
       "rate": 45
     }
   ],
-  "uifOptions": {
+  "uif_options": {
     "rate": 1,
     "ceiling": 17712
-  },
-  "inputList": [
-    {
-      "name": "age",
-      "type": "number",
-      "labelString": "Age"
-    },
-    {
-      "name": "salary",
-      "type": "number",
-      "labelString": "Salary"
-    },
-    {
-      "name": "periodsPerAnnum",
-      "type": "select",
-      "labelString": "Period"
-    }
-  ],
-  "outputList": [
-    {
-      "name": "deAnnualizedNetPaye",
-      "labelString": "PAYE"
-    },
-    {
-      "name": "deAnnualizedUif",
-      "labelString": "UIF"
-    },
-    {
-      "name": "netSalary",
-      "labelString": "Net Salary"
-    }
-  ]
-}
+  }
+ }

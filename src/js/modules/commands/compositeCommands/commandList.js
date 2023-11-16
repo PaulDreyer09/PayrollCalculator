@@ -1,10 +1,10 @@
 import { Command } from "../command.js";
 
 export class CommandList extends Command {
-  constructor(listName, ...children) {
+  constructor(list_name, ...children) {
     super();
     this.children = children;
-    this.listName = listName;
+    this.list_name = list_name;
   }
 
   /**
@@ -13,7 +13,7 @@ export class CommandList extends Command {
    * @returns {CommandList}
    */
   static factory(params) {
-    return new CommandList(params.listName);
+    return new CommandList(params.list_name);
   }
 
   add(command){
@@ -23,11 +23,11 @@ export class CommandList extends Command {
     this.children.push(command);
   }
 
-  execute(dataSheet) {
+  execute(data_sheet) {
     for (const command of this.children) {
-      dataSheet = command.execute(dataSheet);
+      data_sheet = command.execute(data_sheet);
     }
-    return dataSheet;
+    return data_sheet;
   }
 
     /**
@@ -35,11 +35,11 @@ export class CommandList extends Command {
    * @param {Visitor} visitor 
    */
   accept(visitor) {
-    visitor.enterCommandList(this);
+    visitor.enter_command_list(this);
     for (const command of this.children) {
       command.accept(visitor);
     }
-    visitor.exitCommandList(this);
+    visitor.exit_command_list(this);
     return visitor;
   }
 }

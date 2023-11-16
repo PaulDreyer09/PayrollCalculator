@@ -3,10 +3,10 @@ import { Visitor } from "./visitor.js";
 export class ConsolePrettyPrinterVisitor extends Visitor {
   constructor() {
     super();
-    this.indentLevel = 0;
-    this.indentCharacter = "\t";
-    this.currentIndentString = "";
-    this.infoIndentString = this._createStringIndent(1);
+    this.indent_level = 0;
+    this.indent_character = "\t";
+    this.current_indent_string = "";
+    this.info_indent_string = this._create_string_indent(1);
   }
 
   /**
@@ -14,153 +14,153 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
    * @param {number} level - The level of indentation.
    * @returns {string} - The indented string.
    */
-  _createStringIndent(level) {
-    return this.indentCharacter.repeat(level);
+  _create_string_indent(level) {
+    return this.indent_character.repeat(level);
   }
 
-  _updateIndentValues() {
-    this.currentIndentString = this._createStringIndent(this.indentLevel);
-    this.infoIndentString = this._createStringIndent(this.indentLevel + 1);
+  _update_indent_values() {
+    this.current_indent_string = this._create_string_indent(this.indent_level);
+    this.info_indent_string = this._create_string_indent(this.indent_level + 1);
   }
 
-  _printObjectDataToLog(obj) {
-    const indent = this._createStringIndent(this.indentLevel + 1);
+  _print_object_data_to_log(obj) {
+    const indent = this._create_string_indent(this.indent_level + 1);
 
     for (const key in obj) {
       console.log(`${indent}${key}: ${obj[key]}`);
     }
   }
 
-  //Composite Commands
+  // Composite Commands
 
-  enterCommandList(commandList) {
-    console.log(`${this.currentIndentString}Start Command List: ${commandList.listName}`);
-    this.indentLevel++;
-    this._updateIndentValues();
+  enter_command_list(command_list) {
+    console.log(`${this.current_indent_string}Start Command List: ${command_list.listName}`);
+    this.indent_level++;
+    this._update_indent_values();
   }
 
-  exitCommandList(commandList) {
-    this.indentLevel--;
-    this._updateIndentValues();
-    console.log(`${this.currentIndentString}End Command List: ${commandList.listName}`);
+  exit_command_list(command_list) {
+    this.indent_level--;
+    this._update_indent_values();
+    console.log(`${this.current_indent_string}End Command List: ${command_list.listName}`);
   }
 
-  //Set Constant Commands
+  // Set Constant Commands
 
-  visitSetTableCommand(command) {
-    console.log(`${this.currentIndentString}Setting table data. Reference: ${command.inputReference}`);
-    console.table(command.tableData);
+  visit_set_table_command(command) {
+    console.log(`${this.current_indent_string}Setting table data. Reference: ${command.input_reference}`);
+    console.table(command.table_data);
   }
 
-  visitSetValueCollectionCommand(command) {
-    console.log(`${this.currentIndentString}Setting collection of constants, adding a prefix of '${command.referencePrefix}'`);
-    this._printObjectDataToLog(command.updatedInputData());
+  visit_set_value_collection_command(command) {
+    console.log(`${this.current_indent_string}Setting collection of constants, adding a prefix of '${command.reference_prefix}'`);
+    this._print_object_data_to_log(command.updated_input_data());
   }
 
-  visitSetValueCommand(command) {
-    console.log(`${this.currentIndentString}Setting constant | ${command.inputReference}: ${command.inputValue}`);
+  visit_set_value_command(command) {
+    console.log(`${this.current_indent_string}Setting constant | ${command.input_reference}: ${command.input_value}`);
   }
 
-  //IO Commands
+  // IO Commands
 
-  visitDefineInputCommand(command) {
+  visit_define_input_command(command) {
     const { reference, dataType, properties, text } = command;
 
-    console.log(`${this.currentIndentString}Defining input for ${text}`);
-    console.log(`${this.infoIndentString}Reference: ${reference}`);
-    console.log(`${this.infoIndentString}Data type: ${dataType}`);
+    console.log(`${this.current_indent_string}Defining input for ${text}`);
+    console.log(`${this.info_indent_string}Reference: ${reference}`);
+    console.log(`${this.info_indent_string}Data type: ${dataType}`);
 
     if (properties.options) {
-      console.log(`${this.infoIndentString}Selectable options:`);
+      console.log(`${this.info_indent_string}Selectable options:`);
       for (const option of properties.options) {
-        console.log(`\t${this.infoIndentString}Text: ${option.text}, Value: ${option.value}`);
+        console.log(`\t${this.info_indent_string}Text: ${option.text}, Value: ${option.value}`);
       }
     }
   }
 
-  visitDefineOutputCommand(command) {
+  visit_define_output_command(command) {
     const { reference, dataType, text } = command;
 
-    console.log(`${this.currentIndentString}Defining output for ${text}`);
-    console.log(`${this.infoIndentString}Reference: ${reference}`);
-    console.log(`${this.infoIndentString}Data type: ${dataType}`);
+    console.log(`${this.current_indent_string}Defining output for ${text}`);
+    console.log(`${this.info_indent_string}Reference: ${reference}`);
+    console.log(`${this.info_indent_string}Data type: ${dataType}`);
   }
 
-  //Arithmatic Commands
+  // Arithmetic Commands
 
-  visitAddCommand(command) {
-    console.log(`${this.currentIndentString}Add Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Input references to add together: ${command.inputReferences.join(", ")}`);
+  visit_add_command(command) {
+    console.log(`${this.current_indent_string}Add Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Input references to add together: ${command.input_references.join(", ")}`);
   }
-  visitSubtractCommand(command) {
-    console.log(`${this.currentIndentString}Subtract Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputReferences[0]}`);
-    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.slice(1).join(", ")}`);
-  }
-
-  visitMultiplyCommand(command) {
-    console.log(`${this.currentIndentString}Multiply Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Input references to multiply together: ${command.inputReferences.join(", ")}`);
+  visit_subtract_command(command) {
+    console.log(`${this.current_indent_string}Subtract Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Initial Value reference: ${command.input_references[0]}`);
+    console.log(`${this.info_indent_string}Input references: ${command.input_references.slice(1).join(", ")}`);
   }
 
-  visitDivideCommand(command) {
-    console.log(`${this.currentIndentString}Divide Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputReferences[0]}`);
-    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.slice(1).join(", ")}`);
+  visit_multiply_command(command) {
+    console.log(`${this.current_indent_string}Multiply Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Input references to multiply together: ${command.input_references.join(", ")}`);
   }
 
-  visitAnnualizeCommand(command) {
-    console.log(`${this.currentIndentString}Annualize Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputValueReference}`);
-    console.log(`${this.infoIndentString}Periods per annum reference: ${command.periodsPerAnnumReference}`);
+  visit_divide_command(command) {
+    console.log(`${this.current_indent_string}Divide Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Initial Value reference: ${command.input_references[0]}`);
+    console.log(`${this.info_indent_string}Input references: ${command.input_references.slice(1).join(", ")}`);
   }
 
-  visitDeAnnualizeCommand(command) {
-    console.log(`${this.currentIndentString}DE-Annualize Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Input Value reference: ${command.inputValueReference}`);
-    console.log(`${this.infoIndentString}Periods per annum reference: ${command.periodsPerAnnumReference}`);
+  visit_annualize_command(command) {
+    console.log(`${this.current_indent_string}Annualize Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Initial Value reference: ${command.input_value_reference}`);
+    console.log(`${this.info_indent_string}Periods per annum reference: ${command.periods_per_annum_reference}`);
   }
 
-  visitLesserOfCommand(command) {
-    console.log(`${this.currentIndentString}Lesser-Of Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.join(", ")}`);
+  visit_deannualize_command(command) {
+    console.log(`${this.current_indent_string}DE-Annualize Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Input Value reference: ${command.input_value_reference}`);
+    console.log(`${this.info_indent_string}Periods per annum reference: ${command.periods_per_annum_reference}`);
   }
 
-  visitFlooredDifferenceCommand(command) {
-    console.log(`${this.currentIndentString}Floored Difference Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Initial Value reference: ${command.inputReferences[0]}`);
-    console.log(`${this.infoIndentString}Input references: ${command.inputReferences.slice(1).join(", ")}`);
+  visit_lesser_of_command(command) {
+    console.log(`${this.current_indent_string}Lesser-Of Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Input references: ${command.input_references.join(", ")}`);
   }
 
-  visitCalculateLimitedPercentageCommand(command) {
-    console.log(`${this.currentIndentString}Calculate Limited Percentage Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Input Value reference: ${command.inputValueReference}`);
-    console.log(`${this.infoIndentString}Rate references: ${command.rateReference}`);
-    console.log(`${this.infoIndentString}Ceiling references: ${command.ceilingReference}`);
+  visit_floored_difference_command(command) {
+    console.log(`${this.current_indent_string}Floored Difference Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Initial Value reference: ${command.input_references[0]}`);
+    console.log(`${this.info_indent_string}Input references: ${command.input_references.slice(1).join(", ")}`);
   }
 
-  //Tabled Calculation Commands
-
-  visitCalculateAddedTotalByTiersCommand(command) {
-    console.log(`${this.currentIndentString}Calculate by Added Total Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Input Value reference: ${command.inputValueReference}`);
-    console.log(`${this.infoIndentString}Table reference: ${command.tableReference}`);
+  visit_calculate_limited_percentage_command(command) {
+    console.log(`${this.current_indent_string}Calculate Limited Percentage Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Input Value reference: ${command.input_value_reference}`);
+    console.log(`${this.info_indent_string}Rate references: ${command.rate_reference}`);
+    console.log(`${this.info_indent_string}Ceiling references: ${command.ceiling_reference}`);
   }
 
-  visitCalculateTaxByTiersCommand(command) {
-    console.log(`${this.currentIndentString}Calculate Tax by Tiers Command.`);
-    console.log(`${this.infoIndentString}Result references: ${command.resultReference}`);
-    console.log(`${this.infoIndentString}Input Value reference: ${command.inputValueReference}`);
-    console.log(`${this.infoIndentString}Table reference: ${command.tableReference}`);
+  // Tabled Calculation Commands
+
+  visit_calculate_added_total_by_tiers_command(command) {
+    console.log(`${this.current_indent_string}Calculate by Added Total Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Input Value reference: ${command.input_value_reference}`);
+    console.log(`${this.info_indent_string}Table reference: ${command.table_reference}`);
+  }
+
+  visit_calculate_tax_by_tiers_command(command) {
+    console.log(`${this.current_indent_string}Calculate Tax by Tiers Command.`);
+    console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
+    console.log(`${this.info_indent_string}Input Value reference: ${command.input_value_reference}`);
+    console.log(`${this.info_indent_string}Table reference: ${command.table_reference}`);
   }
 }

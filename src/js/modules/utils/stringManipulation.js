@@ -6,13 +6,13 @@ import * as validation from './validation.js';
  * @param {...string} strings - The strings to concatenate.
  * @returns {string} - The concatenated camelCase string.
  */
-export const stringConcatinateAsCamelCase = (...strings) => {
+export const string_concatinate_as_camel_case = (...strings) => {
     // Get the first string and validate it.
-    let result = validation.validString(strings.shift());
+    let result = validation.valid_string(strings.shift());
 
     // Iterate through the remaining strings, capitalize their first letter, and concatenate them.
     for (let val of strings) {
-        if (typeof validation.validString(val) != 'string') {
+        if (typeof validation.valid_string(val) !== 'string') {
             throw new Error(`Provided argument is not of type string.  Provided value: ${val}`);
         }
         const firstLetter = val[0];
@@ -29,13 +29,13 @@ export const stringConcatinateAsCamelCase = (...strings) => {
  * @param {...string} strings - The strings to concatenate.
  * @returns {string} - The concatenated snake_case string.
  */
-export const stringConcatinateAsSnakeCase = (...strings) => {
+export const string_concatinate_as_snake_case = (...strings) => {
     // Get the first string and validate it.
-    let result = validation.validString(strings.shift());
+    let result = validation.valid_string(strings.shift());
 
     // Iterate through the remaining strings and concatenate them with underscores.
     for (let val of strings) {
-        if (typeof validation.validString(val) != 'string') {
+        if (typeof validation.valid_string(val) !== 'string') {
             throw new Error(`Provided argument is not of type string.  Provided value: ${val}`);
         }
 
@@ -51,7 +51,7 @@ export const stringConcatinateAsSnakeCase = (...strings) => {
  * @param {...string} strings - The strings to concatenate.
  * @returns {string} - The concatenated lower_snake_case string.
  */
-export const stringConcatinateAsLowerSnakeCase = (...strings) => {
-    // Use stringConcatinateAsSnakeCase to concatenate strings and convert the result to lowercase.
-    return stringConcatinateAsSnakeCase(...strings).toLowerCase();
+export const string_concatinate_as_lower_snake_case = (...strings) => {
+    // Use string_concatinate_as_snake_case to concatenate strings and convert the result to lowercase.
+    return string_concatinate_as_snake_case(...strings).toLowerCase();
 }

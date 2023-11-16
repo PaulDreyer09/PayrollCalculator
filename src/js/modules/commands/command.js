@@ -1,31 +1,32 @@
 /**
  * @class
  * @param {Function} func - The arithmetic function to be executed.
- * @param {number} resultReference - Reference to the result position in the dataSheet array.
- * @param {...number} inputReferences - References to the operands' positions in the dataSheet array.
+ * @param {number} result_reference - Reference to the result position in the dataSheet array.
+ * @param {...number} input_references - References to the operands' positions in the dataSheet array.
  */
 export class Command {
-  constructor(...inputReferences) {
-    this.inputReferences = [...inputReferences];
+  constructor(...input_references) {
+    this.input_references = [...input_references];
   }
 
   /**
    * Adds a Command object to this Commands subCommands array
    *
-   * @param {Command} command Command to be added to the subCommand array
+   * @param {Command} sub_command - Command to be added to the sub_command array
    */
-  addSubCommand(command) {}
+  add_sub_command(sub_command) {}
 
   /**
    * Validates if a specific key is present in the dataSheet object.
-   * @param {Object} dataSheet - The object to search for the key.
+   * @param {Object} data_sheet - The object to search for the key.
    * @param {string} name - The key to search for in the dataSheet object.
    * @throws {Error} Throws an error if the key is not found.
    * @returns {any} The value associated with the provided key.
    */
-  getKnownValue(dataSheet, name) {
-    const found = dataSheet[name];
+  get_known_value(data_sheet, name) {
+    const found = data_sheet[name];
     if (found == undefined) {
+      console.log(data_sheet)
       throw new Error(`${name} was not found`);
     }
     return found;
@@ -33,18 +34,18 @@ export class Command {
 
   /**
    * Sets a value for a key in the dataSheet object if the key is not already defined.
-   * @param {Object} dataSheet - The object to set the key-value pair.
+   * @param {Object} data_sheet - The object to set the key-value pair.
    * @param {string} name - The key to set the value for.
    * @param {any} value - The value to set for the key.
    * @throws {Error} Throws an error if the key is already defined.
-   * @returns {Object} The dataSheet object with the updated key-value pair.
+   * @returns {Object} The data_sheet object with the updated key-value pair.
    */
-  setConstant(dataSheet, name, value) {
-    if (name in dataSheet) {
+  set_constant(data_sheet, name, value) {
+    if (name in data_sheet) {
       throw new Error(`${name} is already defined. Attempted to set ${name} as ${value}`);
     }
-    dataSheet[name] = value;
-    return dataSheet;
+    data_sheet[name] = value;
+    return data_sheet;
   }
 
   execute() {

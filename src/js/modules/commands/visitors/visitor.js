@@ -1,44 +1,43 @@
 export class Visitor {
-  //Composite Commands
-  enterCommandList(commandList) {}
+  // Composite Commands
+  enter_command_list(commandList) {}
   
-  exitCommandList(commandList) {}
+  exit_command_list(commandList) {}
 
-  //Set Constant Commands
-  visitSetTableCommand(command) {}
+  // Set Constant Commands
+  visit_set_table_command(command) {}
   
-  visitSetValueCollectionCommand(command) {}
+  visit_set_value_collection_command(command) {}
   
-  visitSetValueCommand(command) {}
+  visit_set_value_command(command) {}
 
-  //IO Commands  
-  visitDefineInputCommand(command) {}
+  // IO Commands  
+  visit_define_input_command(command) {}
   
-  visitDefineOutputCommand(command) {}
+  visit_define_output_command(command) {}
   
-  //Arithmatic Commands
-  visitAddCommand(command) {}
+  // Arithmetic Commands
+  visit_add_command(command) {}
   
-  visitSubtractCommand(command) {}
+  visit_subtract_command(command) {}
   
-  visitMultiplyCommand(command) {}
+  visit_multiply_command(command) {}
   
-  visitDivideCommand(command) {}
+  visit_divide_command(command) {}
   
-  visitAnnualizeCommand(command) {}
+  visit_annualize_command(command) {}
   
-  visitDeAnnualizeCommand(command) {}
+  visit_de_annualize_command(command) {}
   
-  visitLesserOfCommand(command) {}
+  visit_lesser_of_command(command) {}
   
-  visitFlooredDifferenceCommand(command) {}
+  visit_floored_difference_command(command) {}
   
-  visitCalculateLimitedPercentageCommand(command) {}
+  visit_calculate_limited_percentage_command(command) {}
   
-  visitTabledCalculationCommand(command) {}
+  visit_tabled_calculation_command(command) {}
   
-  visitCalculateAddedTotalByTiersCommand(command) {}
+  visit_calculate_added_total_by_tiers_command(command) {}
   
-  visitCalculateTaxByTiersCommand(command) {}
-
+  visit_calculate_tax_by_tiers_command(command) {}
 }

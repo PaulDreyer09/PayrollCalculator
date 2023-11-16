@@ -31,12 +31,12 @@ export class JsonLoaderVisitor extends Visitor {
     }
   }
 
-  visitSetTableCommand(command) {
-    this._load_pending_command(command, "tableData");
+  visit_set_table_command(command) {
+    this._load_pending_command(command, "table_data");
   }
 
-  visitSetValueCollectionCommand(command) {
-    this._load_pending_command(command, "inputData");
+  visit_set_value_collection_command(command) {
+    this._load_pending_command(command, "input_data");
   }
 
   async initialize_pending_commands() {
@@ -56,9 +56,9 @@ export class JsonLoaderVisitor extends Visitor {
           continue;
         }
 
-        command[referene] = data;
+        command[pending_data_reference] = object_data;
       } catch (error) {
-        console.error(error);
+        console.error("Error while initializing pending command data:\n", error.message);
       }
     }
   }

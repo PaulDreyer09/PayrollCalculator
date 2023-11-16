@@ -4,7 +4,7 @@
  * @throws {Error} Throws an error if the provided value is not a finite number.
  * @returns {number} The validated number.
  */
-export const validNumber = (n) => {
+export const valid_number = (n) => {
     // console.log('ValidNumber: ', n)
     if(!Number.isFinite(n)){
         throw new Error('The provided value is not a number.\nProvided: ' + n);
@@ -18,7 +18,7 @@ export const validNumber = (n) => {
  * @throws {Error} Throws an error if the provided value is neither a finite number nor Infinity.
  * @returns {number} The validated number or Infinity.
  */
-export const validNumberOrInfinite = (n) => {
+export const valid_number_or_infinite = (n) => {
     if(!Number.isFinite(n) && n != Infinity){
         throw new Error('The provided value is not a number', 'Provided: ', n);
     }
@@ -31,8 +31,8 @@ export const validNumberOrInfinite = (n) => {
  * @throws {Error} Throws an error if the provided value is not a finite number or if it is zero.
  * @returns {number} The validated non-zero number.
  */
-export const validNumberNonZero = (n) => {
-    validNumber(n);
+export const valid_number_non_zero = (n) => {
+    valid_number(n);
     if(n == 0){
         throw new Error('Cannot divide by 0');
     }
@@ -45,9 +45,9 @@ export const validNumberNonZero = (n) => {
  * @param {string} name - The name to be validated as an HTML input element type.
  * @returns {boolean} - True if the name is a valid HTML input element type, otherwise false.
  */
-export const validInputElementName = (inputName) => {
+export const valid_input_element_name = (inputName) => {
     // List of known HTML element types
-    const validInputTypes = [
+    const valid_input_types = [
         "text",
         "password",
         "textarea",
@@ -66,10 +66,10 @@ export const validInputElementName = (inputName) => {
     ];
 
     // Regular expression to match valid HTML element names (non-empty, starts with letter, no white space)
-    const validElementRegex = /^[a-z][a-z0-9]*$/;
+    const valid_element_regex = /^[a-z][a-z0-9]*$/;
 
     // Check if the input string is a valid HTML element type
-    if(validElementRegex.test(inputName) && validInputTypes.includes(inputName.toLowerCase())){
+    if(valid_element_regex.test(inputName) && valid_input_types.includes(inputName.toLowerCase())){
         return inputName;
     }
     else{
@@ -77,15 +77,15 @@ export const validInputElementName = (inputName) => {
     }
 }
 
-export const validString = (inputString) => {
+export const valid_string = (inputString) => {
     if(typeof inputString != 'string'){
         throw new Error(`Provided input is not of type string. Provided type: ${typeof inputString}, value: ${inputString}`);
     }
 
     // Test if a string contains only whitespace or is empty
-    const whitespaceRegex = /^(?!\s+$).+/;
+    const whitespace_regex = /^(?!\s+$).+/;
 
-    if (whitespaceRegex.test(inputString)) {
+    if (whitespace_regex.test(inputString)) {
         return inputString;
     } else {
         throw new Error("Empty or whitespace string provided.");

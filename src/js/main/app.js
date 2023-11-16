@@ -1,12 +1,11 @@
-import * as commandController from "../modules/commands/commandsController.js";
-import { hardCodedJSON } from "../modules/config/sa.js";
+import * as command_controller from "../modules/commands/commandsController.js";
 import * as UI from "..//ui/calculatorUI.js";
 
 export const run = async () => {  
-  // commandController.loadJson(getJsonFilePath("south_africa"))
-  document.testJson = commandController.testJson;
-  const command = await commandController.getCommand("south_africa");
+
+  // document.test_json = command_controller.test_json();
+  const command = await command_controller.get_command("south_africa");
   console.log(command)
-  UI.initializeCalculator(command);
+  UI.initialize_calculator(command);
 };
 

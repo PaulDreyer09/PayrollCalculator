@@ -5,27 +5,29 @@ import { ArithmeticCommand } from "./arithmaticCommand.js";
  * @class
  * @extends ArithmeticCommand
  * @param {function} func - The calculation function to apply.
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {TableReference} tableReference - Reference to the table for calculation.
- * @param {...InputValueReference} inputValueReferences - References to the input values.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {table_reference} table_reference - Reference to the table for calculation.
+ * @param {...input_value_references} input_value_references - References to the input values.
  */
 export class TabledCalculationCommand extends ArithmeticCommand {
-  constructor(func, resultReference, tableReference, ...inputValueReferences) {
-    super(func, resultReference, ...inputValueReferences);
-    this.tableReference = tableReference;
+  constructor(func, result_reference, table_reference, ...input_value_references) {
+    super(func, result_reference, ...input_value_references);
+    this.table_reference = table_reference;
   }
   
   get inputValueReference (){
-    return this.inputValueReferences;
+    return this.input_value_references;
   }
 
   execute(values) {
-    const inputValues = [];
-    const table = this.getKnownValue(values, this.tableReference);
-    for (const reference of this.inputReferences) {
-      inputValues.push(this.getKnownValidNumber(values, reference));
+    const input_values = [];
+    const table = this.get_known_value(values, this.table_reference);
+
+    for (const reference of this.input_references) {
+      input_values.push(this.get_known_valid_number(values, reference));
     }
-    const result = this.func(table, ...inputValues);
-    return this.setConstant(values, this.resultReference, result);
+
+    const result = this.func(table, ...input_values);
+    return this.set_constant(values, this.result_reference, result);
   }
 }

@@ -1,11 +1,11 @@
 import { Command } from "../command.js";
-import * as strFormat from "../../utils/stringManipulation.js";
+import * as str_format from "../../utils/stringManipulation.js";
 
 export class SetValueCollectionCommand extends Command {
-  constructor(referencePrefix, json_file_path, json_data_reference) {  //input data changed to jsonFileName
+  constructor(reference_prefix, json_file_path, json_data_reference) {  //input data changed to jsonFileName
     super();
-    this.referencePrefix = referencePrefix;
-    this.inputData = {};
+    this.reference_prefix = reference_prefix;
+    this.input_data = {};
     this.json_file_path = json_file_path;
     this.json_data_reference = json_data_reference;
 
@@ -17,32 +17,32 @@ export class SetValueCollectionCommand extends Command {
    * @returns {SetValueCollectionCommand}
    */
   static factory(params) {
-    return new SetValueCollectionCommand(params.referencePrefix, params.json_file_path, params.json_data_reference);
+    return new SetValueCollectionCommand(params.reference_prefix, params.json_file_path, params.json_data_reference);
   }
 
   /**
-   * Creates a new object with the same key/values as inputData in the class, with the prefix added to the keys
+   * Creates a new object with the same key/values as input_data in the class, with the prefix added to the keys
    * @returns {object}
    */
-  _getRenamedInputData() {
+  _get_renamed_input_data() {
     const result = {};
 
-    for (const reference of Object.getOwnPropertyNames(this.inputData)) {
-      let newReference = strFormat.stringConcatinateAsCamelCase(this.referencePrefix, reference);
-      result[newReference] = this.inputData[reference];
+    for (const reference of Object.getOwnPropertyNames(this.input_data)) {
+      let new_reference = str_format.string_concatinate_as_snake_case(this.reference_prefix, reference);
+      result[new_reference] = this.input_data[reference];
     }
 
     return result;
   }
 
-  execute(dataSheet) {
-    const renameInputData = this._getRenamedInputData();
+  execute(data_sheet) {
+    const rename_input_data = this._get_renamed_input_data();
 
-    for (const reference in renameInputData) {
-      this.setConstant(dataSheet, reference, renameInputData[reference]);
+    for (const reference in rename_input_data) {
+      this.set_constant(data_sheet, reference, rename_input_data[reference]);
     }
 
-    return dataSheet;
+    return data_sheet;
   }
 
   /**
@@ -50,15 +50,15 @@ export class SetValueCollectionCommand extends Command {
    * @param {Visitor} visitor
    */
   accept(visitor) {
-    visitor.visitSetValueCollectionCommand(this);
+    visitor.visit_set_value_collection_command(this);
   }
 }
 
 export class SetTableCommand extends Command {
-  constructor(inputReference, json_file_path, json_data_reference) {
+  constructor(input_reference, json_file_path, json_data_reference) {
     super();
-    this.inputReference = inputReference;
-    this.tableData = {};
+    this.input_reference = input_reference;
+    this.table_data = {};
     this.json_file_path = json_file_path;
     this.json_data_reference = json_data_reference;
   }
@@ -69,12 +69,12 @@ export class SetTableCommand extends Command {
    * @returns {SetTableCommand}
    */
   static factory(params) {
-    return new SetTableCommand(params.inputReference, params.json_file_path, params.json_data_reference);
+    return new SetTableCommand(params.input_reference, params.json_file_path, params.json_data_reference);
   }
 
-  execute(dataSheet) {
-    this.setConstant(dataSheet, this.inputReference, this.tableData);
-    return dataSheet;
+  execute(data_sheet) {
+    this.set_constant(data_sheet, this.input_reference, this.table_data);
+    return data_sheet;
   }
 
   /**
@@ -82,15 +82,15 @@ export class SetTableCommand extends Command {
    * @param {Visitor} visitor
    */
   accept(visitor) {
-    visitor.visitSetTableCommand(this);
+    visitor.visit_set_table_command(this);
   }
 }
 
 export class SetValueCommand extends Command {
-  constructor(inputReference, inputValue) {
+  constructor(input_reference, input_value) {
     super();
-    this.inputReference = inputReference;
-    this.inputValue = inputValue;
+    this.input_reference = input_reference;
+    this.input_value = input_value;
   }
 
   /**
@@ -99,12 +99,12 @@ export class SetValueCommand extends Command {
    * @returns {SetValueCommand}
    */
   static factory(params) {
-    return new SetValueCommand(params.inputReference, params.inputValue);
+    return new SetValueCommand(params.input_reference, params.input_value);
   }
 
-  execute(dataSheet) {
-    this.setConstant(dataSheet, this.inputReference, this.inputValue);
-    return dataSheet;
+  execute(data_sheet) {
+    this.set_constant(data_sheet, this.input_reference, this.input_value);
+    return data_sheet;
   }
 
   /**
@@ -112,6 +112,6 @@ export class SetValueCommand extends Command {
    * @param {Visitor} visitor
    */
   accept(visitor) {
-    visitor.visitSetValueCommand(this);
+    visitor.visit_set_value_command(this);
   }
 }

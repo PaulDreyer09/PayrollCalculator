@@ -5,12 +5,12 @@ import { ArithmeticCommand } from "./arithmaticCommand.js";
  * AddCommand - Represents a command to perform addition.
  * @class
  * @extends ArithmeticCommand
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {...InputReference} inputReferences - References to the input values.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {...input_reference} input_references - References to the input values.
  */
 export class AddCommand extends ArithmeticCommand {
-  constructor(resultReference, ...inputReferences) {
-    super(calc.sum, resultReference, ...inputReferences);
+  constructor(result_reference, ...input_references) {
+    super(calc.sum, result_reference, ...input_references);
     this.name = "Add";
   }
 
@@ -20,7 +20,7 @@ export class AddCommand extends ArithmeticCommand {
    * @returns {AddCommand}
    */
   static factory(params) {
-    return new AddCommand(params.resultReference, ...params.inputReferences);
+    return new AddCommand(params.result_reference, ...params.input_references);
   }
 
   /**
@@ -28,7 +28,7 @@ export class AddCommand extends ArithmeticCommand {
    * @param {Visitor} visitor 
    */
   accept(visitor) {
-    visitor.visitAddCommand(this);
+    visitor.visit_add_command(this);
   }
 }
 
@@ -36,12 +36,12 @@ export class AddCommand extends ArithmeticCommand {
  * SubtractCommand - Represents a command to perform subtraction.
  * @class
  * @extends ArithmeticCommand
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {...InputReference} inputReferences - References to the input values.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {...input_reference} input_references - References to the input values.
  */
 export class SubtractCommand extends ArithmeticCommand {
-  constructor(resultReference, ...inputReferences) {
-    super(calc.subtract, resultReference, ...inputReferences);
+  constructor(result_reference, ...input_references) {
+    super(calc.subtract, result_reference, ...input_references);
     this.name = "Subtract";
   }
 
@@ -51,11 +51,11 @@ export class SubtractCommand extends ArithmeticCommand {
    * @returns {SubtractCommand}
    */
   static factory(params) {
-    return new SubtractCommand(params.resultReference, ...params.inputReferences);
+    return new SubtractCommand(params.result_reference, ...params.input_references);
   }
 
   accept(visitor) {
-    visitor.visitSubtractCommand(this);
+    visitor.visit_subtract_command(this);
   }
 }
 
@@ -63,12 +63,12 @@ export class SubtractCommand extends ArithmeticCommand {
  * MultiplyCommand - Represents a command to perform multiplication.
  * @class
  * @extends ArithmeticCommand
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {...InputReference} inputReferences - References to the input values.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {...input_reference} input_references - References to the input values.
  */
 export class MultiplyCommand extends ArithmeticCommand {
-  constructor(resultReference, ...inputReferences) {
-    super(calc.multiply, resultReference, ...inputReferences);
+  constructor(result_reference, ...input_references) {
+    super(calc.multiply, result_reference, ...input_references);
     this.name = "Multiply;";
   }
 
@@ -78,11 +78,11 @@ export class MultiplyCommand extends ArithmeticCommand {
    * @returns {MultiplyCommand}
    */
   static factory(params) {
-    return new MultiplyCommand(params.resultReference, ...params.inputReferences);
+    return new MultiplyCommand(params.result_reference, ...params.input_references);
   }
 
   accept(visitor) {
-    visitor.visitMultiplyCommand(this);
+    visitor.visit_multiply_command(this);
   }
 }
 
@@ -90,12 +90,12 @@ export class MultiplyCommand extends ArithmeticCommand {
  * DivideCommand - Represents a command to perform division.
  * @class
  * @extends ArithmeticCommand
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {...InputReference} inputReferences - References to the input values.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {...input_reference} input_references - References to the input values.
  */
 export class DivideCommand extends ArithmeticCommand {
-  constructor(resultReference, ...inputReferences) {
-    super(calc.divide, resultReference, ...inputReferences);
+  constructor(result_reference, ...input_references) {
+    super(calc.divide, result_reference, ...input_references);
     this.name = "Divide";
   }
 
@@ -105,11 +105,11 @@ export class DivideCommand extends ArithmeticCommand {
    * @returns {AddCommand}
    */
   static factory(params) {
-    return new DivideCommand(params.resultReference, ...params.inputReferences);
+    return new DivideCommand(params.result_reference, ...params.input_references);
   }
 
   accept(visitor) {
-    visitor.visitDivideCommand(this);
+    visitor.visit_divide_command(this);
   }
 }
 
@@ -117,13 +117,13 @@ export class DivideCommand extends ArithmeticCommand {
  * AnnualizeCommand - Represents a command to annualize a value.
  * @class
  * @extends ArithmeticCommand
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {InputValueReference} inputValueReference - Reference to the input value.
- * @param {PeriodsPerAnnumReference} periodsPerAnnumReference - Reference to periods per annum value.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {input_value_reference} input_value_reference - Reference to the input value.
+ * @param {periods_per_annum_reference} periods_per_annum_reference - Reference to periods per annum value.
  */
 export class AnnualizeCommand extends ArithmeticCommand {
-  constructor(resultReference, inputValueReference, periodsPerAnnumReference) {
-    super(calc.annualize, resultReference, inputValueReference, periodsPerAnnumReference);
+  constructor(result_reference, input_value_reference, periods_per_annum_reference) {
+    super(calc.annualize, result_reference, input_value_reference, periods_per_annum_reference);
     this.name = "Annualize";
   }
 
@@ -133,15 +133,15 @@ export class AnnualizeCommand extends ArithmeticCommand {
    * @returns {AnnualizeCommand}
    */
   static factory(params) {
-    return new AnnualizeCommand(params.resultReference, params.inputValueReference, params.periodsPerAnnumReference);
+    return new AnnualizeCommand(params.result_reference, params.input_value_reference, params.periods_per_annum_reference);
   }
 
-  get inputValueReference() {
-    return this.inputReferences[0];
+  get input_value_reference() {
+    return this.input_references[0];
   }
 
-  get periodsPerAnnumReference() {
-    return this.inputReferences[1];
+  get periods_per_annum_reference() {
+    return this.input_references[1];
   }
 
     /**
@@ -149,7 +149,7 @@ export class AnnualizeCommand extends ArithmeticCommand {
    * @param {Visitor} visitor 
    */
   accept(visitor) {
-    visitor.visitAnnualizeCommand(this);
+    visitor.visit_annualize_command(this);
   }
 }
 
@@ -157,13 +157,13 @@ export class AnnualizeCommand extends ArithmeticCommand {
  * DeAnnualizeCommand - Represents a command to de-annualize a value.
  * @class
  * @extends ArithmeticCommand
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {InputValueReference} inputValueReference - Reference to the input value.
- * @param {NewPeriodsPerAnnumReference} newPeriodsPerAnnumReference - Reference to new periods per annum value.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {input_value_reference} input_value_reference - Reference to the input value.
+ * @param {Newperiods_per_annum_reference} new_periods_per_annum_reference - Reference to new periods per annum value.
  */
 export class DeAnnualizeCommand extends ArithmeticCommand {
-  constructor(resultReference, inputValueReference, newPeriodsPerAnnumReference) {
-    super(calc.deAnnualize, resultReference, inputValueReference, newPeriodsPerAnnumReference);
+  constructor(result_reference, input_value_reference, new_periods_per_annum_reference) {
+    super(calc.de_annualize, result_reference, input_value_reference, new_periods_per_annum_reference);
     this.name = "DE-Annualize";
   }
 
@@ -173,15 +173,15 @@ export class DeAnnualizeCommand extends ArithmeticCommand {
    * @returns {DeAnnualizeCommand}
    */
   static factory(params) {
-    return new DeAnnualizeCommand(params.resultReference, params.inputValueReference, params.newPeriodsPerAnnumReference);
+    return new DeAnnualizeCommand(params.result_reference, params.input_value_reference, params.new_periods_per_annum_reference);
   }
 
-  get inputValueReference() {
-    return this.inputReferences[0];
+  get input_value_reference() {
+    return this.input_references[0];
   }
 
-  get periodsPerAnnumReference() {
-    return this.inputReferences[1];
+  get periods_per_annum_reference() {
+    return this.input_references[1];
   }
 
     /**
@@ -189,7 +189,7 @@ export class DeAnnualizeCommand extends ArithmeticCommand {
    * @param {Visitor} visitor 
    */
   accept(visitor) {
-    visitor.visitDeAnnualizeCommand(this);
+    visitor.visit_de_annualize_command(this);
   }
 }
 
@@ -197,12 +197,12 @@ export class DeAnnualizeCommand extends ArithmeticCommand {
  * LesserOfCommand - Represents a command to calculate the lesser of the input values.
  * @class
  * @extends ArithmeticCommand
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {...InputReference} inputReferences - References to the input values.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {...input_reference} input_references - References to the input values.
  */
 export class LesserOfCommand extends ArithmeticCommand {
-  constructor(resultReference, ...inputReferences) {
-    super(calc.lesserOf, resultReference, ...inputReferences);
+  constructor(result_reference, ...input_references) {
+    super(calc.lesserOf, result_reference, ...input_references);
     this.name = "Lesser Of";
   }
 
@@ -212,7 +212,7 @@ export class LesserOfCommand extends ArithmeticCommand {
    * @returns {LesserOfCommand}
    */
   static factory(params) {
-    return new LesserOfCommand(params.resultReference, ...params.inputReferences);
+    return new LesserOfCommand(params.result_reference, ...params.input_references);
   }
 
     /**
@@ -220,7 +220,7 @@ export class LesserOfCommand extends ArithmeticCommand {
    * @param {Visitor} visitor 
    */
   accept(visitor) {
-    visitor.visitLesserOfCommand(this);
+    visitor.visit_lesser_of_command(this);
   }
 }
 
@@ -228,12 +228,12 @@ export class LesserOfCommand extends ArithmeticCommand {
  * FlooredDifferenceCommand - Represents a command to calculate the floored difference between the input values.
  * @class
  * @extends ArithmeticCommand
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {...InputReference} inputReferences - References to the input values.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {...input_reference} input_references - References to the input values.
  */
 export class FlooredDifferenceCommand extends ArithmeticCommand {
-  constructor(resultReference, ...inputReferences) {
-    super(calc.flooredDifference, resultReference, ...inputReferences);
+  constructor(result_reference, ...input_references) {
+    super(calc.floored_difference, result_reference, ...input_references);
     this.name = "Floored Difference";
   }
 
@@ -243,7 +243,7 @@ export class FlooredDifferenceCommand extends ArithmeticCommand {
    * @returns {FlooredDifferenceCommand}
    */
   static factory(params) {
-    return new FlooredDifferenceCommand(params.resultReference, ...params.inputReferences);
+    return new FlooredDifferenceCommand(params.result_reference, ...params.input_references);
   }
 
     /**
@@ -251,7 +251,7 @@ export class FlooredDifferenceCommand extends ArithmeticCommand {
    * @param {Visitor} visitor 
    */
   accept(visitor) {
-    visitor.visitFlooredDifferenceCommand(this);
+    visitor.visit_floored_difference_command(this);
   }
 }
 
@@ -259,14 +259,14 @@ export class FlooredDifferenceCommand extends ArithmeticCommand {
  * CalculateLimitedTaxationCommand - Represents a command to calculate limited taxation based on inputs.
  * @class
  * @extends ArithmeticCommand
- * @param {ResultReference} resultReference - The reference to store the result.
- * @param {InputValueReference} inputValueReference - Reference to the input value.
- * @param {RateReference} rateReference - Reference to the tax rate.
- * @param {CeilingReference} ceilingReference - Reference to the ceiling value for taxation.
+ * @param {result_reference} result_reference - The reference to store the result.
+ * @param {input_value_reference} input_value_reference - Reference to the input value.
+ * @param {RateReference} rate_reference - Reference to the tax rate.
+ * @param {CeilingReference} ceiling_reference - Reference to the ceiling value for taxation.
  */
 export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
-  constructor(resultReference, inputValueReference, rateReference, ceilingReference) {
-    super(calc.calculateLimitedPercentage, resultReference, inputValueReference, rateReference, ceilingReference);
+  constructor(result_reference, input_value_reference, rate_reference, ceiling_reference) {
+    super(calc.calculate_limited_percentage, result_reference, input_value_reference, rate_reference, ceiling_reference);
     this.name = "Calculate Limited Taxation";
   }
 
@@ -276,17 +276,17 @@ export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
    * @returns {CalculateLimitedPercentageCommand}
    */
   static factory(params) {
-    return new CalculateLimitedPercentageCommand(params.resultReference, params.inputValueReference, params.rateReference, params.ceilingReference);
+    return new CalculateLimitedPercentageCommand(params.result_reference, params.input_value_reference, params.rate_reference, params.ceiling_reference);
   }
 
-  get inputValueReference() {
-    return this.inputReferences[0];
+  get input_value_reference() {
+    return this.input_references[0];
   }
-  get rateReference() {
-    return this.inputReferences[1];
+  get rate_reference() {
+    return this.input_references[1];
   }
-  get ceilingReference() {
-    return this.inputReferences[2];
+  get ceiling_reference() {
+    return this.input_references[2];
   }
 
     /**
@@ -294,6 +294,6 @@ export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
    * @param {Visitor} visitor 
    */
   accept(visitor) {
-    visitor.visitCalculateLimitedPercentageCommand(this);
+    visitor.visit_calculate_limited_percentage_command(this);
   }
 }

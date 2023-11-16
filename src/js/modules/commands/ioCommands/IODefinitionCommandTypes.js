@@ -1,8 +1,8 @@
 import { IODefinitionCommand } from "./IODefinitionCommand.js";
 
 export class DefineInputCommand extends IODefinitionCommand {
-  constructor(reference, text, dataType, validationType, properties = null) {
-    super(reference, text, dataType, validationType, properties, "DefineInputCommand");
+  constructor(reference, text, data_type, validation_type, properties = null) {
+    super(reference, text, data_type, validation_type, properties, "DefineInputCommand");
   }
 
   /**
@@ -11,7 +11,7 @@ export class DefineInputCommand extends IODefinitionCommand {
    * @returns {DefineInputCommand}
    */
   static factory(params) {
-    return new DefineInputCommand(params.reference, params.text, params.dataType, params.validationType, params.properties);
+    return new DefineInputCommand(params.reference, params.text, params.data_type, params.validation_type, params.properties);
   }
 
     /**
@@ -19,13 +19,13 @@ export class DefineInputCommand extends IODefinitionCommand {
    * @param {Visitor} visitor 
    */
   accept(visitor) {
-    visitor.visitDefineInputCommand(this);
+    visitor.visit_define_input_command(this);
   }
 }
 
 export class DefineOutputCommand extends IODefinitionCommand {
-  constructor(reference, text, dataType, validationType, properties = null) {
-    super(reference, text, dataType, validationType, properties, "DefineOutputCommand");
+  constructor(reference, text, data_type, validation_type, properties = null) {
+    super(reference, text, data_type, validation_type, properties, "DefineOutputCommand");
   }
 
   /**
@@ -34,7 +34,7 @@ export class DefineOutputCommand extends IODefinitionCommand {
    * @returns {DefineOutputCommand}
    */
   static factory(params) {
-    return new DefineOutputCommand(params.reference, params.text, params.dataType, params.validationType, params.properties);
+    return new DefineOutputCommand(params.reference, params.text, params.data_type, params.validation_type, params.properties);
   }
 
     /**
@@ -42,7 +42,7 @@ export class DefineOutputCommand extends IODefinitionCommand {
    * @param {Visitor} visitor 
    */
   accept(visitor) {
-    visitor.visitDefineOutputCommand(this);
+    visitor.visit_define_output_command(this);
     return visitor;
   }
 }

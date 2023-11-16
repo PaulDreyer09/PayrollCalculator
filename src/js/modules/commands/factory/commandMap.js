@@ -1,23 +1,23 @@
-import * as arithmaticCommandTypes from "../arithmaticCommands/arithmaticCommandTypes.js";
-import * as tabledCalculationCommandTypes from "../arithmaticCommands/tabledCalculationCommandTypes.js";
-import * as CommandListTypes from "../compositeCommands/commandList.js";
-import * as IODefinitionCommandTypes from "../ioCommands/IODefinitionCommandTypes.js";
-import * as setConstantCommandTypes from "../setConstantCommands/setConstantCommandTypes.js";
+import * as arithmatic_command_types from "../arithmaticCommands/arithmaticCommandTypes.js";
+import * as tabled_calculation_command_types from "../arithmaticCommands/tabledCalculationCommandTypes.js";
+import * as command_list_types from "../compositeCommands/commandList.js";
+import * as io_definition_command_types from "../ioCommands/IODefinitionCommandTypes.js";
+import * as set_constant_command_types from "../setConstantCommands/setConstantCommandTypes.js";
 
-const getCommandTypesList = () => [
-  arithmaticCommandTypes,
-  tabledCalculationCommandTypes,
-  CommandListTypes,
-  IODefinitionCommandTypes,
-  setConstantCommandTypes,
+const get_command_types_list = () => [
+  arithmatic_command_types,
+  tabled_calculation_command_types,
+  command_list_types,
+  io_definition_command_types,
+  set_constant_command_types,
 ];
 
-export const getCommandsMap = () => {
+export const get_commands_map = () => {
   const map = {};
 
-  for (const commandTypes of getCommandTypesList()) {
-    for (const key in commandTypes) {
-      map[key] = commandTypes[key];
+  for (const command_types of get_command_types_list()) {
+    for (const key in command_types) {
+      map[key] = command_types[key];
     }
   }
 

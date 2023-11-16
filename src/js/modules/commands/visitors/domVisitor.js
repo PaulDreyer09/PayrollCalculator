@@ -5,8 +5,8 @@ import { Visitor } from "./visitor.js";
 export class IOVisitor extends Visitor {
   constructor() {
     super();
-    this.inputDefinitions = [];
-    this.outputDefinitions = [];
+    this.input_definitions = [];
+    this.output_definitions = [];
   }
 
   /**
@@ -14,7 +14,7 @@ export class IOVisitor extends Visitor {
    * @param {string} reference 
    * @returns 
    */
-  _toInputFieldId(reference) {
+  _to_input_field_id(reference) {
     return reference + "-input";
   }
 
@@ -23,7 +23,7 @@ export class IOVisitor extends Visitor {
    * @param {string} reference 
    * @returns 
    */
-  _toOutputFieldId(reference) {
+  _to_output_field_id(reference) {
     return reference + "-result";
   }
 
@@ -31,110 +31,110 @@ export class IOVisitor extends Visitor {
    * Adds the visited DefineInputCommand to the inputDefinitions collection
    * @param {DefineInputCommand} command 
    */
-  visitDefineInputCommand(command) {
-    this.inputDefinitions.push(command);
+  visit_define_input_command(command) {
+    this.input_definitions.push(command);
   }
 
-    /**
+  /**
    * Adds the visited DefineOutputCommand to the outputDefinitions collection
    * @param {DefineOutputCommand} command 
    */
-  visitDefineOutputCommand(command) {
-    this.outputDefinitions.push(command);
+  visit_define_output_command(command) {
+    this.output_definitions.push(command);
   }
 }
 
 export class InputCollectorVisitor extends IOVisitor {
   constructor() {
     super();
-    this.collectedInputData = {};
+    this.collected_input_data = {};
   }
 
   /**
    * Gets the input value from the input element from the dom
-   * @param {string} inputReference - The reference to the input to collect 
+   * @param {string} input_reference - The reference to the input to collect 
    */
-  _collectInputValueFromDom(inputReference) {
-    const id = this._toInputFieldId(inputReference);
-    const inputElement = document.querySelector(`#${id}`);
-    const name = inputElement.name;
-    let value = inputElement.value;
+  _collect_input_value_from_dom(input_reference) {
+    const id = this._to_input_field_id(input_reference);
+    const input_element = document.querySelector(`#${id}`);
+    const name = input_element.name;
+    let value = input_element.value;
 
-    if ("dataType" in inputElement && inputElement["dataType"] === "number") {
+    if ("data_type" in input_element && input_element["data_type"] === "number") {
       value = parseFloat(value);
     }
 
-    this.collectedInputData[name] = value;
+    this.collected_input_data[name] = value;
   }
 
-  visitDefineInputCommand(command) {
-    super.visitDefineInputCommand(command);
-    this._collectInputValueFromDom(command.reference);
+  visit_define_input_command(command) {
+    super.visit_define_input_command(command);
+    this._collect_input_value_from_dom(command.reference);
   }
 }
 
 export class OutputDisplayerVisitor extends IOVisitor {
-  constructor(resultData, outputPrefix = "") {
+  constructor(result_data, output_prefix = "") {
     super();
-    this._resultData = resultData;
-    this._outputPrefix = outputPrefix;
+    this._result_data = result_data;
+    this._output_prefix = output_prefix;
   }
 
-  _outputResultToDom(command) {
-    const outputElementId = this._toOutputFieldId(command.reference);
-    const outputElement = document.querySelector(`#${outputElementId}`);
-    const value = this._resultData[command.reference];
+  _output_result_to_dom(command) {
+    const output_element_id = this._to_output_field_id(command.reference);
+    const output_element = document.querySelector(`#${output_element_id}`);
+    const value = this._result_data[command.reference];
 
-    outputElement.innerHTML = `${this._outputPrefix} ${value.toFixed(2)}`;
+    output_element.innerHTML = `${this._output_prefix} ${value.toFixed(2)}`;
   }
 
-  visitDefineOutputCommand(command) {
-    super.visitDefineOutputCommand(command);
-    this._outputResultToDom(command);
+  visit_define_output_command(command) {
+    super.visit_define_output_command(command);
+    this._output_result_to_dom(command);
   }
 }
 
 export class IODomBuilderVisitor extends IOVisitor {
   constructor() {
     super();
-    this.inputElements = {};
-    this.outputElements = {};
-    this.inputContainerElement = dom.createElement("div", {
+    this.input_elements = {};
+    this.output_elements = {};
+    this.input_container_element = dom.create_element("div", {
       class: "inputFieldsContainer",
     });
-    this.outputContainerElement = dom.createElement("div", {
+    this.output_container_element = dom.create_element("div", {
       class: "outputFieldsContainer",
     });
   }
 
-  visitDefineInputCommand(command) {
-    super.visitDefineInputCommand(command);
-    this._createInputField(command);
+  visit_define_input_command(command) {
+    super.visit_define_input_command(command);
+    this._create_input_field(command);
   }
 
-  visitDefineOutputCommand(command) {
-    super.visitDefineOutputCommand(command);
-    this._createOutputField(command);
+  visit_define_output_command(command) {
+    super.visit_define_output_command(command);
+    this._create_output_field(command);
   }
 
-  resetInputElements(){
-    for(const key in this.inputElements){
-      dom.resetElementNode(this.inputElements[key]);
+  reset_input_elements(){
+    for(const key in this.input_elements){
+      dom.reset_element_node(this.input_elements[key]);
     }
   }
 
-  resetOutputElements(){
-    for(const key in this.outputElements){
-      this.outputElements[key].innerHTML = '';
+  reset_output_elements(){
+    for(const key in this.output_elements){
+      this.output_elements[key].innerHTML = '';
     }
   }
 
-  _createInputElement(validationType, name, id, dataType, properties) {
-    switch (validationType) {
+  _create_input_element(validation_type, name, id, data_type, properties) {
+    switch (validation_type) {
       case "value": {
-        return dom.createElement("input", {
+        return dom.create_element("input", {
           type: "number",
-          dataType,
+          data_type,
           id,
           min: properties.min ?? null,
           value: 0,
@@ -142,8 +142,8 @@ export class IODomBuilderVisitor extends IOVisitor {
         });
       }
       case "list": {
-        return dom.createElement("select", {
-          dataType,
+        return dom.create_element("select", {
+          data_type,
           id,
           name,
         });
@@ -154,37 +154,37 @@ export class IODomBuilderVisitor extends IOVisitor {
     }
   }
 
-  _createInputField(inputDefinition) {
-    const { reference, text, dataType, validationType, properties } = inputDefinition;
+  _create_input_field(input_definition) {
+    const { reference, text, data_type, validation_type, properties } = input_definition;
 
-    const inputElementId = this._toInputFieldId(reference);
+    const input_element_id = this._to_input_field_id(reference);
 
-    const inputFieldContainer = dom.createContainerWithLabel(text, inputElementId, ["form-control"]);
+    const input_field_container = dom.create_container_with_label(text, input_element_id, ["form-control"]);
 
-    const inputElement = this._createInputElement(validationType, reference, inputElementId, dataType, properties);
+    const input_element = this._create_input_element(validation_type, reference, input_element_id, data_type, properties);
 
-    if (!inputElement) {
-      throw new Error(`IODomBuilderVisitor: Invalid dataType has been provided in input definition for ${reference}(${dataType})`);
+    if (!input_element) {
+      throw new Error(`IODomBuilderVisitor: Invalid data_type has been provided in input definition for ${reference}(${data_type})`);
     }
 
-    if (validationType === "list" && "options" in properties) {
-      dom.initializeSelect(properties.options, inputElement);
+    if (validation_type === "list" && "options" in properties) {
+      dom.initialize_select(properties.options, input_element);
     }
 
-    inputFieldContainer.append(inputElement);
+    input_field_container.append(input_element);
 
-    this.inputElements[reference] = inputElement;
-    this.inputContainerElement.append(inputFieldContainer);
-    return inputFieldContainer;
+    this.input_elements[reference] = input_element;
+    this.input_container_element.append(input_field_container);
+    return input_field_container;
   }
 
-  _createOutputField(outputDefinition) {
-    const outputFieldId = this._toOutputFieldId(outputDefinition.reference);
-    const outputFieldContainer = dom.createContainerWithLabel(outputDefinition.text, outputFieldId, ["result"]);
-    const outputElement = dom.createElement("p", { id: outputFieldId });
+  _create_output_field(output_definition) {
+    const output_field_id = this._to_output_field_id(output_definition.reference);
+    const output_field_container = dom.create_container_with_label(output_definition.text, output_field_id, ["result"]);
+    const output_element = dom.create_element("p", { id: output_field_id });
 
-    outputFieldContainer.append(outputElement);
-    this.outputContainerElement.append(outputFieldContainer);
-    this.outputElements[outputDefinition.reference] = outputElement;
+    output_field_container.append(output_element);
+    this.output_container_element.append(output_field_container);
+    this.output_elements[output_definition.reference] = output_element;
   }
 }

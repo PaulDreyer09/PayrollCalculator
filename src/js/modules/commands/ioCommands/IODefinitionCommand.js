@@ -2,85 +2,85 @@ import {Command} from "../command.js";
 import * as validation from '../../utils/validation.js';
 
 export class IODefinitionCommand extends Command {
-    constructor(reference, text, dataType, validationType, properties, commandName) {
+    constructor(reference, text, data_type, validation_type, properties, command_name) {
         super();
         this.reference = reference;
         this.text = text;
-        this.dataType = dataType;
-        this.validationType = validationType;
+        this.data_type = data_type;
+        this.validation_type = validation_type;
         this.properties = properties == null ? {} : properties;
-        this.commandName = commandName;
+        this.command_name = command_name;
     };
 
-    validateDataType(inputValue) {
-        switch (this.dataType) {
+    validate_data_type(input_value) {
+        switch (this.data_type) {
             case 'number': {
-                validation.validNumber(inputValue);
+                validation.valid_number(input_value);
                 break;
             }
             case 'string': {
-                validation.validString(inputValue);
+                validation.valid_string(input_value);
                 break;
             }
             default: {
-                throw new Error(`${this.commandName}: Unknown data type set up for data named: ${this.reference}`);
+                throw new Error(`${this.command_name}: Unknown data type set up for data named: ${this.reference}`);
             }
         }
         return true;
     };
 
-    execute(dataSheet) {
+    execute(data_sheet) {
         //Test if the datasheet contains the defined data reference
-        if (!(this.reference in dataSheet)) {
-            throw new Error(`${this.commandName}: No expected data found with name: ${this.reference}`);
+        if (!(this.reference in data_sheet)) {
+            throw new Error(`${this.command_name}: No expected data found with name: ${this.reference}`);
         }
 
-        const dataValue = dataSheet[this.reference];
+        const data_value = data_sheet[this.reference];
 
-        if (typeof dataValue !== this.dataType) {
-            throw new Error(`${this.commandName}: The data type for the data with name, ${this.reference}, is not the same as the required. Expected: ${this.dataType}. Found ${typeof dataValue }`);
+        if (typeof data_value !== this.data_type) {
+            throw new Error(`${this.command_name}: The data type for the data with name, ${this.reference}, is not the same as the required. Expected: ${this.data_type}. Found ${typeof data_value }`);
         }
 
         //Validation by value or by list
-        switch (this.validationType) {
+        switch (this.validation_type) {
             case 'value': {
-                this.validateDataType(dataValue);
+                this.validate_data_type(data_value);
                 break;
             }
             case 'list': {
                 if ((!('options' in this.properties))) {
-                    throw new Error(`${this.commandName}: No options provided for input command for output named: ${this.reference}`);
+                    throw new Error(`${this.command_name}: No options provided for input command for output named: ${this.reference}`);
                 }
 
                 let found = false;
                 for (const option of this.properties.options) {
-                    if (option.value === dataValue) {
+                    if (option.value === data_value) {
                         found = true;
                     }
                 }
 
                 if (!found) {
-                    throw new Error(`${this.commandName}: The data with name, ${this.reference}, does not have a value which corresponds to the given options`);
+                    throw new Error(`${this.command_name}: The data with name, ${this.reference}, does not have a value which corresponds to the given options`);
                 }
-                this.validateDataType(dataValue);
+                this.validate_data_type(data_value);
                 break;
             }
         }
 
         //Max and Min validation
         if('min' in this.properties){
-            if(dataValue < this.properties.min){
-                throw new Error(`${this.commandName}: The value of ${this.reference} is less than the set minimum of ${this.properties.min}`);
+            if(data_value < this.properties.min){
+                throw new Error(`${this.command_name}: The value of ${this.reference} is less than the set minimum of ${this.properties.min}`);
             }
         }
 
         if('max' in this.properties){
-            if(dataValue > this.properties.max){
-                throw new Error(`${this.commandName}: The value of ${this.reference} is more than the set minimum of ${this.properties.max}`);
+            if(data_value > this.properties.max){
+                throw new Error(`${this.command_name}: The value of ${this.reference} is more than the set minimum of ${this.properties.max}`);
             }
         }
 
-        return dataSheet;
+        return data_sheet;
     }
 }
 

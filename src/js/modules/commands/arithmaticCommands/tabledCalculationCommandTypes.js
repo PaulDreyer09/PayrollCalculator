@@ -5,13 +5,13 @@ import * as calc from "../../payrollFunctions/calculationFunctions.js";
  * CalculateAddedTotalByTiersCommand - Represents a command to calculate the added total by tiers based on a table and an input value.
  * @class
  * @extends TabledCalculationCommand
- * @param {ResultsReference} resultsReference - The reference to store the results.
- * @param {TableReference} tableReference - Reference to the table for calculation.
- * @param {InputValueReference} inputValueReference - Reference to the input value.
+ * @param {string} results_reference - The reference to store the results.
+ * @param {string} table_reference - Reference to the table for calculation.
+ * @param {string} input_value_reference - Reference to the input value.
  */
 export class CalculateAddedTotalByTiersCommand extends TabledCalculationCommand {
-  constructor(resultsReference, tableReference, inputValueReference) {
-    super(calc.calculateAddedTotalByTiers, resultsReference, tableReference, inputValueReference);
+  constructor(results_reference, table_reference, input_value_reference) {
+    super(calc.calculate_added_total_by_tiers, results_reference, table_reference, input_value_reference);
     this.name = "Calculate Added Total By Tiers";
   }
 
@@ -21,7 +21,7 @@ export class CalculateAddedTotalByTiersCommand extends TabledCalculationCommand 
    * @returns {CalculateAddedTotalByTiersCommand}
    */
   static factory(params) {
-    return new CalculateAddedTotalByTiersCommand(params.resultsReference, params.tableReference, params.inputValueReference);
+    return new CalculateAddedTotalByTiersCommand(params.results_reference, params.table_reference, params.input_value_reference);
   }
 
   /**
@@ -29,7 +29,7 @@ export class CalculateAddedTotalByTiersCommand extends TabledCalculationCommand 
    * @param {Visitor} visitor
    */
   accept(visitor) {
-    visitor.visitCalculateAddedTotalByTiersCommand(this);
+    visitor.visit_calculate_added_total_by_tiers_command(this);
   }
 }
 
@@ -37,13 +37,13 @@ export class CalculateAddedTotalByTiersCommand extends TabledCalculationCommand 
  * CalculateTaxByTiersCommand - Represents a command to calculate the total tax by tiers based on a table and an input value.
  * @class
  * @extends TabledCalculationCommand
- * @param {ResultsReference} resultsReference - The reference to store the results.
- * @param {TableReference} tableReference - Reference to the table for calculation.
- * @param {InputValueReference} inputValueReference - Reference to the input value.
+ * @param {string} results_reference - The reference to store the results.
+ * @param {string} table_reference - Reference to the table for calculation.
+ * @param {string} input_value_reference - Reference to the input value.
  */
 export class CalculateTaxByTiersCommand extends TabledCalculationCommand {
-  constructor(resultsReference, tableReference, inputValueReference) {
-    super(calc.calculateTotalTaxByTiers, resultsReference, tableReference, inputValueReference);
+  constructor(results_reference, table_reference, input_value_reference) {
+    super(calc.calculate_total_tax_by_tiers, results_reference, table_reference, input_value_reference);
     this.name = "Calculate Tax Total By Tiers";
   }
 
@@ -53,7 +53,7 @@ export class CalculateTaxByTiersCommand extends TabledCalculationCommand {
    * @returns {CalculateTaxByTiersCommand}
    */
   static factory(params) {
-    return new CalculateTaxByTiersCommand(params.resultsReference, params.tableReference, params.inputValueReference);
+    return new CalculateTaxByTiersCommand(params.results_reference, params.table_reference, params.input_value_reference);
   }
 
   /**
@@ -61,6 +61,6 @@ export class CalculateTaxByTiersCommand extends TabledCalculationCommand {
    * @param {Visitor} visitor
    */
   accept(visitor) {
-    visitor.visitCalculateTaxByTiersCommand(this);
+    visitor.visit_calculate_tax_by_tiers_command(this);
   }
 }

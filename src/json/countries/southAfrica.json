@@ -1,44 +1,44 @@
 {
-  "typeName": "CommandList",
+  "type_name": "CommandList",
   "params": {
-    "listName": "South African Tax Calculation",
+    "list_name": "South African Tax Calculation",
     "children": [
       {
-        "typeName": "CommandList",
+        "type_name": "CommandList",
         "params": {
-          "listName": "Define Input Commands",
+          "list_name": "Define Input Commands",
           "children": [
             {
-              "typeName": "DefineInputCommand",
+              "type_name": "DefineInputCommand",
               "params": {
-                "reference": "employeeAge",
+                "reference": "employee_age",
                 "text": "Age",
-                "dataType": "number",
-                "validationType": "value",
+                "data_type": "number",
+                "validation_type": "value",
                 "properties": {
                   "min": 0
                 }
               }
             },
             {
-              "typeName": "DefineInputCommand",
+              "type_name": "DefineInputCommand",
               "params": {
-                "reference": "grossSalary",
+                "reference": "gross_salary",
                 "text": "Salary",
-                "dataType": "number",
-                "validationType": "value",
+                "data_type": "number",
+                "validation_type": "value",
                 "properties": {
                   "min": 0
                 }
               }
             },
             {
-              "typeName": "DefineInputCommand",
+              "type_name": "DefineInputCommand",
               "params": {
-                "reference": "periodsPerAnnum",
+                "reference": "periods_per_annum",
                 "text": "Periods",
-                "dataType": "number",
-                "validationType": "list",
+                "data_type": "number",
+                "validation_type": "list",
                 "properties": {
                   "options": [
                     {
@@ -65,39 +65,39 @@
         }
       },
       {
-        "typeName": "CommandList",
+        "type_name": "CommandList",
         "params": {
-          "listName": "Set Constant Commands",
+          "list_name": "Set Constant Commands",
           "children": [
             {
-              "typeName": "SetValueCommand",
+              "type_name": "SetValueCommand",
               "params": {
-                "inputReference": "monthsPerYear",
-                "inputValue": 12
+                "input_reference": "months_per_year",
+                "input_value": 12
               }
             },
             {
-              "typeName": "SetValueCollectionCommand",
+              "type_name": "SetValueCollectionCommand",
               "params": {
-                "referencePrefix": "uif",
+                "reference_prefix": "uif",
                 "json_file_path": "../src/json/inputData/southAfrica.json",
-                "json_data_reference": "uifOptions"
+                "json_data_reference": "uif_options"
               }
             },
             {
-              "typeName": "SetTableCommand",
+              "type_name": "SetTableCommand",
               "params": {
-                "inputReference": "taxRebatesBrackets",
+                "input_reference": "tax_rebates_brackets",
                 "json_file_path": "../src/json/inputData/southAfrica.json",
-                "json_data_reference": "taxRebatesBrackets"
+                "json_data_reference": "tax_rebates_brackets"
               }
             },
             {
-              "typeName": "SetTableCommand",
+              "type_name": "SetTableCommand",
               "params": {
-                "inputReference": "taxBrackets",
+                "input_reference": "tax_brackets",
                 "json_file_path": "../src/json/inputData/southAfrica.json",
-                "json_data_reference": "taxBrackets"
+                "json_data_reference": "tax_brackets"
                 
               }
             }
@@ -105,93 +105,93 @@
         }
       },
       {
-        "typeName": "CommandList",
+        "type_name": "CommandList",
         "params": {
-          "listName": "Calculation Commands",
+          "list_name": "Calculation Commands",
           "children": [
             {
-              "typeName": "AnnualizeCommand",
+              "type_name": "AnnualizeCommand",
               "params": {
-                "resultReference": "annualIncome",
-                "inputValueReference": "grossSalary",
-                "periodsPerAnnumReference": "periodsPerAnnum"
+                "result_reference": "annual_income",
+                "input_value_reference": "gross_salary",
+                "periods_per_annum_reference": "periods_per_annum"
               }
             },
             {
-              "typeName": "DeAnnualizeCommand",
+              "type_name": "DeAnnualizeCommand",
               "params": {
-                "resultReference": "monthlyIncome",
-                "inputValueReference": "annualIncome",
-                "newPeriodsPerAnnumReference": "monthsPerYear"
+                "result_reference": "monthly_income",
+                "input_value_reference": "annual_income",
+                "new_periods_per_annum_reference": "months_per_year"
               }
             },
             {
-              "typeName": "CalculateLimitedPercentageCommand",
+              "type_name": "CalculateLimitedPercentageCommand",
               "params": {
-                "resultReference": "monthlyUif",
-                "inputValueReference": "monthlyIncome",
-                "rateReference": "uifRate",
-                "ceilingReference": "uifCeiling"
+                "result_reference": "monthly_uif",
+                "input_value_reference": "monthly_income",
+                "rate_reference": "uif_rate",
+                "ceiling_reference": "uif_ceiling"
               }
             },
             {
-              "typeName": "AnnualizeCommand",
+              "type_name": "AnnualizeCommand",
               "params": {
-                "resultReference": "annualUif",
-                "inputValueReference": "monthlyUif",
-                "periodsPerAnnumReference": "monthsPerYear"
+                "result_reference": "annual_uif",
+                "input_value_reference": "monthly_uif",
+                "periods_per_annum_reference": "months_per_year"
               }
             },
             {
-              "typeName": "DeAnnualizeCommand",
+              "type_name": "DeAnnualizeCommand",
               "params": {
-                "resultReference": "deAnnualizedUif",
-                "inputValueReference": "annualUif",
-                "newPeriodsPerAnnumReference": "periodsPerAnnum"
+                "result_reference": "de_annualized_uif",
+                "input_value_reference": "annual_uif",
+                "new_periods_per_annum_reference": "periods_per_annum"
               }
             },
             {
-              "typeName": "CalculateAddedTotalByTiersCommand",
+              "type_name": "CalculateAddedTotalByTiersCommand",
               "params": {
-                "resultsReference": "annualTaxRebates",
-                "tableReference": "taxRebatesBrackets",
-                "inputValueReference": "employeeAge"
+                "results_reference": "annual_tax_rebates",
+                "table_reference": "tax_rebates_brackets",
+                "input_value_reference": "employee_age"
               }
             },
             {
-              "typeName": "CalculateTaxByTiersCommand",
+              "type_name": "CalculateTaxByTiersCommand",
               "params": {
-                "resultsReference": "annualGrossPaye",
-                "tableReference": "taxBrackets",
-                "inputValueReference": "annualIncome"
+                "results_reference": "annual_gross_paye",
+                "table_reference": "tax_brackets",
+                "input_value_reference": "annual_income"
               }
             },
             {
-              "typeName": "FlooredDifferenceCommand",
+              "type_name": "FlooredDifferenceCommand",
               "params": {
-                "resultReference": "annualNetPaye",
-                "inputReferences": [
-                  "annualGrossPaye",
-                  "annualTaxRebates"
+                "result_reference": "annual_net_paye",
+                "input_references": [
+                  "annual_gross_paye",
+                  "annual_tax_rebates"
                 ]
               }
             },
             {
-              "typeName": "DeAnnualizeCommand",
+              "type_name": "DeAnnualizeCommand",
               "params": {
-                "resultReference": "deAnnualizedNetPaye",
-                "inputValueReference": "annualNetPaye",
-                "newPeriodsPerAnnumReference": "periodsPerAnnum"
+                "result_reference": "de_annualized_net_paye",
+                "input_value_reference": "annual_net_paye",
+                "new_periods_per_annum_reference": "periods_per_annum"
               }
             },
             {
-              "typeName": "SubtractCommand",
+              "type_name": "SubtractCommand",
               "params": {
-                "resultReference": "netSalary",
-                "inputReferences": [
-                  "grossSalary",
-                  "deAnnualizedUif",
-                  "deAnnualizedNetPaye"
+                "result_reference": "net_salary",
+                "input_references": [
+                  "gross_salary",
+                  "de_annualized_uif",
+                  "de_annualized_net_paye"
                 ]
               }
             }
@@ -199,35 +199,35 @@
         }
       },
       {
-        "typeName": "CommandList",
+        "type_name": "CommandList",
         "params": {
-          "listName": "Output Definitions",
+          "list_name": "Output Definitions",
           "children": [
             {
-              "typeName": "DefineOutputCommand",
+              "type_name": "DefineOutputCommand",
               "params": {
-                "reference": "deAnnualizedNetPaye",
+                "reference": "de_annualized_net_paye",
                 "text": "PAYE",
-                "dataType": "number",
-                "validationType": "value"
+                "data_type": "number",
+                "validation_type": "value"
               }
             },
             {
-              "typeName": "DefineOutputCommand",
+              "type_name": "DefineOutputCommand",
               "params": {
-                "reference": "deAnnualizedUif",
+                "reference": "de_annualized_uif",
                 "text": "UIF",
-                "dataType": "number",
-                "validationType": "value"
+                "data_type": "number",
+                "validation_type": "value"
               }
             },
             {
-              "typeName": "DefineOutputCommand",
+              "type_name": "DefineOutputCommand",
               "params": {
-                "reference": "netSalary",
+                "reference": "net_salary",
                 "text": "Net Salary",
-                "dataType": "number",
-                "validationType": "value"
+                "data_type": "number",
+                "validation_type": "value"
               }
             }
           ]
