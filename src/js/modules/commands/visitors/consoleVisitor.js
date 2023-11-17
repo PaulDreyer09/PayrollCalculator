@@ -34,7 +34,7 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
   // Composite Commands
 
   enter_command_list(command_list) {
-    console.log(`${this.current_indent_string}Start Command List: ${command_list.listName}`);
+    console.log(`${this.current_indent_string}Start Command List: ${command_list.list_name}`);
     this.indent_level++;
     this._update_indent_values();
   }
@@ -42,7 +42,7 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
   exit_command_list(command_list) {
     this.indent_level--;
     this._update_indent_values();
-    console.log(`${this.current_indent_string}End Command List: ${command_list.listName}`);
+    console.log(`${this.current_indent_string}End Command List: ${command_list.list_name}`);
   }
 
   // Set Constant Commands
@@ -54,7 +54,7 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
 
   visit_set_value_collection_command(command) {
     console.log(`${this.current_indent_string}Setting collection of constants, adding a prefix of '${command.reference_prefix}'`);
-    this._print_object_data_to_log(command.updated_input_data());
+    this._print_object_data_to_log(command.input_data);
   }
 
   visit_set_value_command(command) {
@@ -64,11 +64,11 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
   // IO Commands
 
   visit_define_input_command(command) {
-    const { reference, dataType, properties, text } = command;
+    const { reference, data_type, properties, text } = command;
 
     console.log(`${this.current_indent_string}Defining input for ${text}`);
     console.log(`${this.info_indent_string}Reference: ${reference}`);
-    console.log(`${this.info_indent_string}Data type: ${dataType}`);
+    console.log(`${this.info_indent_string}Data type: ${data_type}`);
 
     if (properties.options) {
       console.log(`${this.info_indent_string}Selectable options:`);
@@ -79,11 +79,11 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
   }
 
   visit_define_output_command(command) {
-    const { reference, dataType, text } = command;
+    const { reference, data_type, text } = command;
 
     console.log(`${this.current_indent_string}Defining output for ${text}`);
     console.log(`${this.info_indent_string}Reference: ${reference}`);
-    console.log(`${this.info_indent_string}Data type: ${dataType}`);
+    console.log(`${this.info_indent_string}Data type: ${data_type}`);
   }
 
   // Arithmetic Commands
@@ -153,7 +153,7 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
   visit_calculate_added_total_by_tiers_command(command) {
     console.log(`${this.current_indent_string}Calculate by Added Total Command.`);
     console.log(`${this.info_indent_string}Result references: ${command.result_reference}`);
-    console.log(`${this.info_indent_string}Input Value reference: ${command.input_value_reference}`);
+    console.log(`${this.info_indent_string}Input Value reference: ${command.input_references}`);
     console.log(`${this.info_indent_string}Table reference: ${command.table_reference}`);
   }
 

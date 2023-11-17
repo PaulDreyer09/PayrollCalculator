@@ -1,12 +1,12 @@
 import { ConsolePrettyPrinterVisitor } from "../modules/commands/commandsController.js";
-import * as command_module from "../modules/commands/commandsController.js";
-import { hard_coded_json } from "../modules/config/sa.js";
+import * as command_controller from "../modules/commands/commandsController.js";
 
-const get_command_json_data = () => {
-  return hard_coded_json;
-};
-
-export const console_print_commands = () => {
-  const command = command_module.getCommands(get_command_json_data());
+export const console_print_commands = async () => {
+  // const command = command_module.getCommands(get_command_json_data());
+  console.log("Before");
+  const command = await command_controller.get_command("south_africa");
+  console.log("After", command);
   command.accept(new ConsolePrettyPrinterVisitor());
 };
+
+// await console_print_commands();

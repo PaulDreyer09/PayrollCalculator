@@ -41,6 +41,7 @@ export class SetValueCollectionCommand extends Command {
     for (const reference in rename_input_data) {
       this.set_constant(data_sheet, reference, rename_input_data[reference]);
     }
+    console.log(this)
 
     return data_sheet;
   }

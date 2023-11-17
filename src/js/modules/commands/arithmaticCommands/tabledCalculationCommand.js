@@ -15,8 +15,9 @@ export class TabledCalculationCommand extends ArithmeticCommand {
     this.table_reference = table_reference;
   }
   
-  get inputValueReference (){
-    return this.input_value_references;
+  get input_value_reference (){
+
+    return this.input_references[0];
   }
 
   execute(values) {

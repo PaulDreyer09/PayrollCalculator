@@ -228,8 +228,8 @@ export class LesserOfCommand extends ArithmeticCommand {
  * FlooredDifferenceCommand - Represents a command to calculate the floored difference between the input values.
  * @class
  * @extends ArithmeticCommand
- * @param {result_reference} result_reference - The reference to store the result.
- * @param {...input_reference} input_references - References to the input values.
+ * @param {string} result_reference - The reference to store the result.
+ * @param {string} input_references - References to the input values.
  */
 export class FlooredDifferenceCommand extends ArithmeticCommand {
   constructor(result_reference, ...input_references) {
@@ -259,10 +259,10 @@ export class FlooredDifferenceCommand extends ArithmeticCommand {
  * CalculateLimitedTaxationCommand - Represents a command to calculate limited taxation based on inputs.
  * @class
  * @extends ArithmeticCommand
- * @param {result_reference} result_reference - The reference to store the result.
- * @param {input_value_reference} input_value_reference - Reference to the input value.
- * @param {RateReference} rate_reference - Reference to the tax rate.
- * @param {CeilingReference} ceiling_reference - Reference to the ceiling value for taxation.
+ * @param {string} result_reference - The reference to store the result.
+ * @param {string} input_value_reference - Reference to the input value.
+ * @param {string} rate_reference - Reference to the tax rate.
+ * @param {string} ceiling_reference - Reference to the ceiling value for taxation.
  */
 export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
   constructor(result_reference, input_value_reference, rate_reference, ceiling_reference) {
@@ -280,6 +280,7 @@ export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
   }
 
   get input_value_reference() {
+    
     return this.input_references[0];
   }
   get rate_reference() {

@@ -80,7 +80,7 @@
               "type_name": "SetValueCollectionCommand",
               "params": {
                 "reference_prefix": "uif",
-                "json_file_path": "../src/json/inputData/southAfrica.json",
+                "json_file_path": "../src/json/inputData/southAfrica/uif_options.json",
                 "json_data_reference": "uif_options"
               }
             },
@@ -88,7 +88,7 @@
               "type_name": "SetTableCommand",
               "params": {
                 "input_reference": "tax_rebates_brackets",
-                "json_file_path": "../src/json/inputData/southAfrica.json",
+                "json_file_path": "../src/json/inputData/southAfrica/tax_rebates_brackets.json",
                 "json_data_reference": "tax_rebates_brackets"
               }
             },
@@ -96,7 +96,7 @@
               "type_name": "SetTableCommand",
               "params": {
                 "input_reference": "tax_brackets",
-                "json_file_path": "../src/json/inputData/southAfrica.json",
+                "json_file_path": "../src/json/inputData/southAfrica/tax_brackets.json",
                 "json_data_reference": "tax_brackets"
                 
               }

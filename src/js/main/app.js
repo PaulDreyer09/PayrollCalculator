@@ -5,7 +5,7 @@ export const run = async () => {
 
   // document.test_json = command_controller.test_json();
   const command = await command_controller.get_command("south_africa");
-  console.log(command)
+  
   UI.initialize_calculator(command);
 };
 

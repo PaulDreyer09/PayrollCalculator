@@ -3,7 +3,7 @@ import { Visitor } from "./visitor.js";
 export class JsonLoaderVisitor extends Visitor {
   constructor() {
     super();
-    this.file_promise_map = {};
+    this.file_promise_map = {}; // path -> [promise, json_value]
     this.pending_commands = [];
   }
 
@@ -13,7 +13,8 @@ export class JsonLoaderVisitor extends Visitor {
     }
 
     try {
-      this.file_promise_map[path] = fetch(path);
+      const promise = fetch(path);
+      this.file_promise_map[path] = {promise, json_value: null};
     } catch (error) {
       console.error("Error fetching command data", error.message);
     }
@@ -40,26 +41,31 @@ export class JsonLoaderVisitor extends Visitor {
   }
 
   async initialize_pending_commands() {
-    for (const {command, pending_data_reference} of this.pending_commands) {
-      const data = await this.file_promise_map[command.json_file_path];
-
-      if (!data.ok) {
-        throw new Error("The fetch response did not return Ok");
-      }
+    const get_json_from_record = async (record) =>{
+      if(record.json_value){
+        return record.json_value;
+      };
 
       try {
-        const object_data = await data.clone().json();
-        const reference = command["json_data_reference"];
+        const response = await record.promise;
 
-        if (reference) {
-          command[pending_data_reference] = object_data[reference];
-          continue;
+        if (!response.ok) {
+          throw new Error("The fetch response did not return Ok");
         }
 
-        command[pending_data_reference] = object_data;
+        return await response.json();
+
       } catch (error) {
         console.error("Error while initializing pending command data:\n", error.message);
       }
+    }
+
+    for (const { command, pending_data_reference } of this.pending_commands) {
+      const record = this.file_promise_map[command.json_file_path];
+      const object_data = await get_json_from_record(record);
+      console.log("Data loaded",  object_data);
+
+      command[pending_data_reference] = object_data;
     }
   }
 }
