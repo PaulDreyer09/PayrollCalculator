@@ -2,38 +2,36 @@ import { Command } from "../command.js";
 import * as validation from "../../utils/validation.js";
 
 export class IODefinitionCommand extends Command {
-  constructor(reference, text, data_type, validation_type, properties, command_name) {
+  /**
+   *
+   * @param {string} reference - Property name in datasheet where the value is stored/read from
+   * @param {string} text -
+   * @param {*} data_type
+   * @param {*} validation_type
+   * @param {*} properties
+   * @param {*} command_name
+   *
+   */
+  constructor(reference, text, data_type, validation_type, properties, command_name, visitor_method_name) {
     super();
     this.reference = reference;
     this.text = text;
-    this.data_type = data_type;
-    this.validation_type = validation_type;
+    this.data_type = data_type; // "string", "number"
+    this.validation_type = validation_type; // "value", "list"
     this.properties = properties == null ? {} : properties;
     this.command_name = command_name;
+    this.visitor_method_name = visitor_method_name;
   }
 
-  get_prompt_message_string() {
-    const options_string = () => {
-        let values = []
-        // console.log(this.properties)
-        for(const option of this.properties.options){
-            // const option = 
-            values.push(option.value);
-        }
-
-        return values.join(', ');
-    }
-    let message = `Value for ${this.text}:`;
-
-    if(typeof this.properties.options != 'undefined'){
-        message += `\nPlease enter a number of the following\n(${options_string()}): `;
-    }
 
 
-    return  message;
-  }
-
-  validate_data_type(input_value) {
+  /**
+   * Checks if the data type of the input_value is either number or string.
+   * @throws - Error if not number or string
+   * @param {any} input_value - input data to check the data type of
+   * @returns {boolean} - returns true if it passes the validation
+   */
+  _validate_data_type(input_value) {
     switch (this.data_type) {
       case "number": {
         validation.valid_number(input_value);
@@ -48,6 +46,11 @@ export class IODefinitionCommand extends Command {
       }
     }
     return true;
+  }
+
+  accept(visitor) {
+    visitor[this.visitor_method_name](this);
+    return visitor;
   }
 
   execute(data_sheet) {
@@ -69,7 +72,7 @@ export class IODefinitionCommand extends Command {
     //Validation by value or by list
     switch (this.validation_type) {
       case "value": {
-        this.validate_data_type(data_value);
+        this._validate_data_type(data_value);
         break;
       }
       case "list": {
@@ -89,7 +92,7 @@ export class IODefinitionCommand extends Command {
             `${this.command_name}: The data with name, ${this.reference}, does not have a value which corresponds to the given options`
           );
         }
-        this.validate_data_type(data_value);
+        this._validate_data_type(data_value);
         break;
       }
     }
