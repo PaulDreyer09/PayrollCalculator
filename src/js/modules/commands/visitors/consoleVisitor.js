@@ -49,7 +49,7 @@ export class ConsolePrettyPrinterVisitor extends Visitor {
 
   visit_set_table_command(command) {
     console.log(`${this.current_indent_string}Setting table data. Reference: ${command.input_reference}`);
-    console.table(command.table_data);
+    console.table(command.input_data);
   }
 
   visit_set_value_collection_command(command) {

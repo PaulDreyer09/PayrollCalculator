@@ -38,33 +38,27 @@ const load_json = async (path) => {
   }
 };
 
-const get_json_folder_uri = () => {
-  return "/src/json/countries/";
+const get_plans_folder_uri = () => {
+  return "/src/json/plans/";
 }
 
-const get_json_input_data_folder_uri = () => {
-  return "../src/json/inputData/";
-}
-
-const get_json_file_path = (country) => {
+const get_country_folder_uri = (country) => {
   const file_name_map = {
-    south_africa: "southAfrica.json",
+    south_africa: "southAfrica",
   };
-  
-  if (!(country in file_name_map)) {
-    throw Error(`The given country key, ${country}, is not valid.`);
-  }
 
-  return get_json_folder_uri() + file_name_map[country];
-};
+  return get_plans_folder_uri() + file_name_map[country] + '/';
+}
 
-const get_command = async (country) => {
-  const command_json = await load_json(get_json_file_path(country));
+const get_command = async (plan_path, data_fetcher_function) => {
+  // const plan_path = "../src/json/plans/southAfrica/plan.json"
+
+  const command_json = await data_fetcher_function(plan_path);
 
   const factory = get_registered_factory();
   const command = factory.get_command(command_json.type_name, command_json.params);
 
-  const json_loader_visitor = command.accept(new JsonLoaderVisitor(get_json_input_data_folder_uri()));
+  const json_loader_visitor = command.accept(new JsonLoaderVisitor(data_fetcher_function));
   await json_loader_visitor.initialize_pending_commands();
   return command;
 };

@@ -7,8 +7,6 @@ export class SetValueCollectionCommand extends Command {
     this.reference_prefix = reference_prefix;
     this.input_data = {};
     this.json_file_path = json_file_path;
-    this.json_data_reference = json_data_reference;
-
   }
 
   /**
@@ -17,7 +15,7 @@ export class SetValueCollectionCommand extends Command {
    * @returns {SetValueCollectionCommand}
    */
   static factory(params) {
-    return new SetValueCollectionCommand(params.reference_prefix, params.json_file_path, params.json_data_reference);
+    return new SetValueCollectionCommand(params.reference_prefix, params.json_file_path);
   }
 
   /**
@@ -41,7 +39,6 @@ export class SetValueCollectionCommand extends Command {
     for (const reference in rename_input_data) {
       this.set_constant(data_sheet, reference, rename_input_data[reference]);
     }
-    console.log(this)
 
     return data_sheet;
   }
@@ -59,9 +56,8 @@ export class SetTableCommand extends Command {
   constructor(input_reference, json_file_path, json_data_reference) {
     super();
     this.input_reference = input_reference;
-    this.table_data = {};
+    this.input_data = {};
     this.json_file_path = json_file_path;
-    this.json_data_reference = json_data_reference;
   }
 
   /**
@@ -70,11 +66,11 @@ export class SetTableCommand extends Command {
    * @returns {SetTableCommand}
    */
   static factory(params) {
-    return new SetTableCommand(params.input_reference, params.json_file_path, params.json_data_reference);
+    return new SetTableCommand(params.input_reference, params.json_file_path);
   }
 
   execute(data_sheet) {
-    this.set_constant(data_sheet, this.input_reference, this.table_data);
+    this.set_constant(data_sheet, this.input_reference, this.input_data);
     return data_sheet;
   }
 
