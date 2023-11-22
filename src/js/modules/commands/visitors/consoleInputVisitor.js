@@ -32,7 +32,6 @@ export class ConsoleInputVisitor extends Visitor {
         return { valid_data, validation_result };
       }
       valid_data = input_command.properties.options[input - 1].value;
-
     }
 
     //Get datasheet ready for input definition command execute
@@ -49,17 +48,53 @@ export class ConsoleInputVisitor extends Visitor {
     return { valid_data, validation_result };
   }
 
+  /**
+   * Build a string prompt message for the required input.
+   *
+   * If validation_type = "list"
+   *    Numbers from 1-x will be showed for input.
+   *    Validation should be done according to the options index + 1
+   * @returns {string}
+   */
+  _get_prompt_message_string(command) {
+  const options_string = () => {
+    let values = [];
+    command.properties.options.forEach((option, index) => {
+      values.push(`${index + 1}: ${option.text}`);
+    });
+
+    return values.join("\n");
+  };
+  let message = `Please enter the Value for ${command.text}:`;
+  // Add min/max prompt
+
+  if (typeof command.properties.min != "undefined") {
+    message += "\nMin: 0";
+  }
+
+  if (typeof command.properties.max != "undefined") {
+    message += "\nMax: 0";
+  }
+
+  if (typeof command.properties.options != "undefined") {
+    message += `\nPlease select one of the following options by entering the corresponding number\n${options_string()} `;
+  }
+
+  return message + '\nInput: ';
+}
+
   async _read_console_input (command){
     let input;
+    const prompt_message = this._get_prompt_message_string(command);
     //Gets input from the console depending on the required data type
     while (true) {
       switch (command.data_type) {
         case "string": {
-          input = await consoleInput.read_string_input(command.get_prompt_message_string());            
+          input = await consoleInput.read_string_input(prompt_message);            
           break;
         }
         case "number": {
-          input = await consoleInput.read_number_input(command.get_prompt_message_string());
+          input = await consoleInput.read_number_input(prompt_message);
           break;
         }
         default: {

@@ -1,5 +1,5 @@
-import { ConsolePrettyPrinterVisitor } from "../modules/commands/commandsController.js";
-import * as command_controller from "../modules/commands/commandsController.js";
+import { ConsolePrettyPrinterVisitor } from "../modules/commands/visitors/consoleVisitor.js";
+import * as command_controller from "../modules/setup/commandsController.js";
 
 export const console_print_commands = async () => {
   // const command = command_module.getCommands(get_command_json_data());

@@ -77,6 +77,11 @@ export const valid_input_element_name = (inputName) => {
     }
 }
 
+/**
+ * Tests whether a given string is not empty nor white space or valid string type
+ * @param {string} inputString - String value to test
+ * @returns {string} - Returns the given input string for chain usage
+ */
 export const valid_string = (inputString) => {
     if(typeof inputString != 'string'){
         throw new Error(`Provided input is not of type string. Provided type: ${typeof inputString}, value: ${inputString}`);

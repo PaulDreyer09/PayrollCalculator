@@ -1,4 +1,4 @@
-import * as calc from "../../payrollFunctions/calculationFunctions.js";
+import * as calc from "../../../payrollFunctions/calculationFunctions.js";
 import { ArithmeticCommand } from "./arithmaticCommand.js";
 
 /**
@@ -12,23 +12,6 @@ export class AddCommand extends ArithmeticCommand {
   constructor(result_reference, ...input_references) {
     super(calc.sum, result_reference, ...input_references);
     this.name = "Add";
-  }
-
-  /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {AddCommand}
-   */
-  static factory(params) {
-    return new AddCommand(params.result_reference, ...params.input_references);
-  }
-
-  /**
-   * Accept a Visitor object to call the opproptiate visit method for the command 
-   * @param {Visitor} visitor 
-   */
-  accept(visitor) {
-    visitor.visit_add_command(this);
   }
 }
 
@@ -44,19 +27,6 @@ export class SubtractCommand extends ArithmeticCommand {
     super(calc.subtract, result_reference, ...input_references);
     this.name = "Subtract";
   }
-
-    /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {SubtractCommand}
-   */
-  static factory(params) {
-    return new SubtractCommand(params.result_reference, ...params.input_references);
-  }
-
-  accept(visitor) {
-    visitor.visit_subtract_command(this);
-  }
 }
 
 /**
@@ -71,19 +41,6 @@ export class MultiplyCommand extends ArithmeticCommand {
     super(calc.multiply, result_reference, ...input_references);
     this.name = "Multiply;";
   }
-
-    /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {MultiplyCommand}
-   */
-  static factory(params) {
-    return new MultiplyCommand(params.result_reference, ...params.input_references);
-  }
-
-  accept(visitor) {
-    visitor.visit_multiply_command(this);
-  }
 }
 
 /**
@@ -97,19 +54,6 @@ export class DivideCommand extends ArithmeticCommand {
   constructor(result_reference, ...input_references) {
     super(calc.divide, result_reference, ...input_references);
     this.name = "Divide";
-  }
-
-    /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {AddCommand}
-   */
-  static factory(params) {
-    return new DivideCommand(params.result_reference, ...params.input_references);
-  }
-
-  accept(visitor) {
-    visitor.visit_divide_command(this);
   }
 }
 
@@ -127,29 +71,12 @@ export class AnnualizeCommand extends ArithmeticCommand {
     this.name = "Annualize";
   }
 
-  /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {AnnualizeCommand}
-   */
-  static factory(params) {
-    return new AnnualizeCommand(params.result_reference, params.input_value_reference, params.periods_per_annum_reference);
-  }
-
   get input_value_reference() {
     return this.input_references[0];
   }
 
   get periods_per_annum_reference() {
     return this.input_references[1];
-  }
-
-    /**
-   * Accept a Visitor object to call the opproptiate visit method for the command 
-   * @param {Visitor} visitor 
-   */
-  accept(visitor) {
-    visitor.visit_annualize_command(this);
   }
 }
 
@@ -167,29 +94,12 @@ export class DeAnnualizeCommand extends ArithmeticCommand {
     this.name = "DE-Annualize";
   }
 
-  /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {DeAnnualizeCommand}
-   */
-  static factory(params) {
-    return new DeAnnualizeCommand(params.result_reference, params.input_value_reference, params.new_periods_per_annum_reference);
-  }
-
   get input_value_reference() {
     return this.input_references[0];
   }
 
   get periods_per_annum_reference() {
     return this.input_references[1];
-  }
-
-    /**
-   * Accept a Visitor object to call the opproptiate visit method for the command 
-   * @param {Visitor} visitor 
-   */
-  accept(visitor) {
-    visitor.visit_de_annualize_command(this);
   }
 }
 
@@ -205,23 +115,6 @@ export class LesserOfCommand extends ArithmeticCommand {
     super(calc.lesserOf, result_reference, ...input_references);
     this.name = "Lesser Of";
   }
-
-  /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {LesserOfCommand}
-   */
-  static factory(params) {
-    return new LesserOfCommand(params.result_reference, ...params.input_references);
-  }
-
-    /**
-   * Accept a Visitor object to call the opproptiate visit method for the command 
-   * @param {Visitor} visitor 
-   */
-  accept(visitor) {
-    visitor.visit_lesser_of_command(this);
-  }
 }
 
 /**
@@ -235,23 +128,6 @@ export class FlooredDifferenceCommand extends ArithmeticCommand {
   constructor(result_reference, ...input_references) {
     super(calc.floored_difference, result_reference, ...input_references);
     this.name = "Floored Difference";
-  }
-
-  /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {FlooredDifferenceCommand}
-   */
-  static factory(params) {
-    return new FlooredDifferenceCommand(params.result_reference, ...params.input_references);
-  }
-
-    /**
-   * Accept a Visitor object to call the opproptiate visit method for the command 
-   * @param {Visitor} visitor 
-   */
-  accept(visitor) {
-    visitor.visit_floored_difference_command(this);
   }
 }
 
@@ -270,17 +146,7 @@ export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
     this.name = "Calculate Limited Taxation";
   }
 
-  /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {CalculateLimitedPercentageCommand}
-   */
-  static factory(params) {
-    return new CalculateLimitedPercentageCommand(params.result_reference, params.input_value_reference, params.rate_reference, params.ceiling_reference);
-  }
-
-  get input_value_reference() {
-    
+  get input_value_reference() {    
     return this.input_references[0];
   }
   get rate_reference() {
@@ -289,12 +155,22 @@ export class CalculateLimitedPercentageCommand extends ArithmeticCommand {
   get ceiling_reference() {
     return this.input_references[2];
   }
+}
 
-    /**
-   * Accept a Visitor object to call the opproptiate visit method for the command 
-   * @param {Visitor} visitor 
-   */
-  accept(visitor) {
-    visitor.visit_calculate_limited_percentage_command(this);
+export const register_classes_to_factory = (factory) => {
+  const class_list = [
+    AddCommand,
+    SubtractCommand,
+    MultiplyCommand,
+    DivideCommand,
+    AnnualizeCommand,
+    DeAnnualizeCommand,
+    LesserOfCommand,
+    FlooredDifferenceCommand,
+    CalculateLimitedPercentageCommand,
+  ]
+  
+  for(const class_constructor of class_list){
+    factory.register_class(class_constructor);
   }
 }

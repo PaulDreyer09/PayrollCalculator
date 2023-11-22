@@ -1,19 +1,10 @@
 import { Command } from "../command.js";
 
 export class CommandList extends Command {
-  constructor(list_name, ...children) {
+  constructor(list_name) {
     super();
-    this.children = children;
+    this.children = [];
     this.list_name = list_name;
-  }
-
-  /**
-   * Creates an instance of the class using the key-value pairs insinde params
-   * @param {object} params - Object containing the parameters to create an instance of the class
-   * @returns {CommandList}
-   */
-  static factory(params) {
-    return new CommandList(params.list_name);
   }
 
   add(command){
@@ -41,5 +32,15 @@ export class CommandList extends Command {
     }
     visitor.exit_command_list(this);
     return visitor;
+  }
+}
+
+export const register_classes_to_factory = (factory) => {
+  const class_list = [
+    CommandList,
+  ]
+  
+  for(const class_constructor of class_list){
+    factory.register_class(class_constructor);
   }
 }

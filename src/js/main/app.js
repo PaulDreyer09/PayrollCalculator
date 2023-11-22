@@ -1,5 +1,5 @@
-import * as command_controller from "../modules/commands/commandsController.js";
-import * as UI from "..//ui/calculatorUI.js";
+import * as command_controller from "../modules/setup/commandsController.js";
+import * as UI from "../ui/calculatorUI.js";
 import { fetch_data } from "../modules/utils/webFetch.js"
 
 export const run = async () => {  

@@ -1,8 +1,8 @@
 import { Command } from "../command.js";
-import * as str_format from "../../utils/stringManipulation.js";
+import * as str_format from "../../../utils/stringManipulation.js";
 
 export class SetValueCollectionCommand extends Command {
-  constructor(reference_prefix, json_file_path, json_data_reference) {  //input data changed to jsonFileName
+  constructor(reference_prefix, json_file_path) {
     super();
     this.reference_prefix = reference_prefix;
     this.input_data = {};
@@ -42,14 +42,6 @@ export class SetValueCollectionCommand extends Command {
 
     return data_sheet;
   }
-
-  /**
-   * Accept a Visitor object to call the opproptiate visit method for the command
-   * @param {Visitor} visitor
-   */
-  accept(visitor) {
-    visitor.visit_set_value_collection_command(this);
-  }
 }
 
 export class SetTableCommand extends Command {
@@ -73,14 +65,6 @@ export class SetTableCommand extends Command {
     this.set_constant(data_sheet, this.input_reference, this.input_data);
     return data_sheet;
   }
-
-  /**
-   * Accept a Visitor object to call the opproptiate visit method for the command
-   * @param {Visitor} visitor
-   */
-  accept(visitor) {
-    visitor.visit_set_table_command(this);
-  }
 }
 
 export class SetValueCommand extends Command {
@@ -103,12 +87,12 @@ export class SetValueCommand extends Command {
     this.set_constant(data_sheet, this.input_reference, this.input_value);
     return data_sheet;
   }
-
-  /**
-   * Accept a Visitor object to call the opproptiate visit method for the command
-   * @param {Visitor} visitor
-   */
-  accept(visitor) {
-    visitor.visit_set_value_command(this);
-  }
 }
+
+export const register_classes_to_factory = (factory) => {
+  const class_list = [SetValueCollectionCommand, SetTableCommand, SetValueCommand];
+
+  for (const class_constructor of class_list) {
+    factory.register_class(class_constructor);
+  }
+};

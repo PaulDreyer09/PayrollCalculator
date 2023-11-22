@@ -1,3 +1,5 @@
+import * as string_manipulation from "../../utils/stringManipulation.js";
+
 /**
  * @class
  * @param {Function} func - The arithmetic function to be executed.
@@ -5,9 +7,7 @@
  * @param {...number} input_references - References to the operands' positions in the dataSheet array.
  */
 export class Command {
-  constructor(...input_references) {
-    this.input_references = [...input_references];
-  }
+  constructor() {}
 
   /**
    * Adds a Command object to this Commands subCommands array
@@ -26,7 +26,7 @@ export class Command {
   get_known_value(data_sheet, name) {
     const found = data_sheet[name];
     if (found == undefined) {
-      console.log(data_sheet)
+      console.log(data_sheet, this.constructor.name);
       throw new Error(`${name} was not found`);
     }
     return found;
@@ -52,8 +52,13 @@ export class Command {
     throw new Error("Execute method needs to be implemented by a derived class before being called");
   }
 
+  /**
+   * Accept a Visitor class to access and visit the current instance of the Command class
+   * @param {Visitor} visitor - Visitor class to visit the command
+   */
   accept(visitor) {
-    throw new Error("The accept() method needs to be implemented in the subclass.");
+    const visit_function_name = "visit_" + string_manipulation.camel_case_to_snake_case(this.constructor.name);
+    visitor[visit_function_name](this);
   }
 
   factory() {

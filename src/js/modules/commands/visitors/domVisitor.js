@@ -1,5 +1,5 @@
 import * as dom from "../../utils/domManipulation.js";
-import { DefineInputCommand } from "../ioCommands/IODefinitionCommandTypes.js";
+import { DefineInputCommand } from "../classes/ioCommands/IODefinitionCommandTypes.js";
 import { Visitor } from "./visitor.js";
 
 export class IOVisitor extends Visitor {

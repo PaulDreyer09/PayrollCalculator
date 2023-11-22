@@ -55,3 +55,46 @@ export const string_concatinate_as_lower_snake_case = (...strings) => {
     // Use string_concatinate_as_snake_case to concatenate strings and convert the result to lowercase.
     return string_concatinate_as_snake_case(...strings).toLowerCase();
 }
+
+/**
+ * Convert a CamelCase string to snake_case
+ * @param {string} str 
+ * @returns {string} returns the snake_case 
+ */
+export const camel_case_to_snake_case = (str) => {
+    const words = []
+    let start_index = 0;
+    let end_index = 0;
+    for(let i = 0; i < str.length; i++){
+        const current_character = str[i];
+
+        //Test if a uppercase is found, update that the end of the current word is found 
+        // and the start of a new word is found, and push the current word.
+        if(current_character === current_character.toUpperCase() && i != 0){
+            end_index = i;
+            words.push(str.slice(start_index, end_index).toLowerCase())
+            start_index = i;
+            continue;
+        }
+
+        //If the end of the string is located, push the last word
+        if(i == str.length - 1){
+            words.push(str.slice(start_index).toLowerCase());
+        }
+    }
+
+    return words.join("_")
+}
+
+/**
+ * 
+ * @param {String} str Input snake_case string to convert to CamelCase
+ * @returns 
+ */
+export const snake_case_to_camel_case = (str) => {
+    const words = str.split('_');
+    const capital_words = words.map((word) => {
+        return word[0].toUpperCase() + word.slice(1);
+    })
+    return capital_words.join('');
+}
