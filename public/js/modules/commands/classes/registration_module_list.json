@@ -1,0 +1,7 @@
+[
+  "arithmaticCommands/arithmaticCommandTypes.js",
+  "arithmaticCommands/tabledCalculationCommandTypes.js",
+  "compositeCommands/commandList.js",
+  "ioCommands/IODefinitionCommandTypes.js",
+  "setConstantCommands/setConstantCommandTypes.js"
+]
