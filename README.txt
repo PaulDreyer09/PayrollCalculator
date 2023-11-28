@@ -1,4 +1,4 @@
-# Tax Calculator Application
+#Tax Calculator Application
 
 This repository contains a tax calculator application that utilizes various design patterns such as the command pattern, visitor pattern, dynamic property assignment, and the abstract factory pattern. The application is designed to calculate taxes for different countries, and it includes a Node prompt version for interactive use.
 
