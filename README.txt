@@ -1,4 +1,4 @@
-#Tax Calculator Application
+# Tax Calculator Application
 
 This repository contains a tax calculator application that utilizes various design patterns such as the command pattern, visitor pattern, dynamic property assignment, and the abstract factory pattern. The application is designed to calculate taxes for different countries, and it includes a Node prompt version for interactive use.
 
@@ -68,11 +68,3 @@ The application utilizes the following design patterns:
 
 - `npm run nodeEntry`: Run the Node prompt version of the application.
 - `npm test`: Run tests using Jest and generate a coverage report.
-
-## Author
-
-[Your Name]
-
-## License
-
-This project is licensed under the ISC License - see the [LICENSE.md](LICENSE.md) file for details.
