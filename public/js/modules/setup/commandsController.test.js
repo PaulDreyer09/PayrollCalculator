@@ -8,13 +8,6 @@ jest.mock("../factory/abstractFactory");
 
 // Mock the JsonLoaderVisitor class for testing initialize_pending_commands
 jest.mock("../commands/visitors/jsonLoaderVisitor");
-// jest.mock("../commands/visitors/jsonLoaderVisitor", () => {
-//   return {
-//     JsonLoaderVisitor: jest.fn(() => ({
-//       initialize_pending_commands: jest.fn(),
-//     })),
-//   };
-// });
 
 // Mock one of the imports for register_classes_to_factory for testing
 jest.mock("../commands/classes/arithmaticCommands/arithmaticCommandTypes.js", () => {
@@ -60,6 +53,9 @@ describe("get_module_location Function test", () => {
 
   it("Returns MockCommand instance", async () => {
     const result = await ct.get_command(plan_path, mock_data_fetcher);
+    
+    //Get the instance of AbstractFactory created by get_command
+    const factory_instance = AbstractFactory.mock.instances[0];
 
     //Test if a MockCommand is returned by get_command
     expect(result.constructor).toBe(MockCommand);
@@ -67,19 +63,14 @@ describe("get_module_location Function test", () => {
     // Verify that the AbstractFactory was instantiated
     expect(AbstractFactory).toHaveBeenCalledTimes(1);
 
-    const factory_instance = AbstractFactory.mock.instances[0];
-
     // Verify that the get_class_instance method of the AbstractFactory was called with the command JSON
     expect(factory_instance.get_class_instance).toHaveBeenCalledWith(mock_return_data[plan_path]);
 
     //Verify that the register_class method of the AbstractFactory has been called 
     expect(factory_instance.register_class).toHaveBeenCalled();
 
-    expect(JsonLoaderVisitor).toHaveBeenCalledWith(mock_data_fetcher);
-
     // Verify that the JsonLoaderVisitor was instantiated with the data_fetcher_function
     expect(JsonLoaderVisitor).toHaveBeenCalledWith(mock_data_fetcher);
-
 
     // Verify that the initialize_pending_commands method of the JsonLoaderVisitor was called
     expect(JsonLoaderVisitor.mock.instances[0].initialize_pending_commands).toHaveBeenCalled();
@@ -101,4 +92,6 @@ describe("get_module_location Function test", () => {
     // Verify that the data_fetcher_function was called with the correct path
     expect(mock_data_fetcher).toHaveBeenCalledWith(path);
   });
+
+
 });

@@ -26,7 +26,7 @@ export class Command {
   get_known_value(data_sheet, name) {
     const found = data_sheet[name];
     if (found == undefined) {
-      console.log(data_sheet, this.constructor.name);
+      // console.log("Searching for " + name + " inside ", data_sheet, this.constructor.name);
       throw new Error(`${name} was not found`);
     }
     return found;

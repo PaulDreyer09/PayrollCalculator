@@ -9,10 +9,10 @@ export class ArithmeticCommand extends Command {
    */
   constructor(func, result_reference, ...input_references) {
     super();
-    this.input_references = [...input_references];
     this.name = null;
-    this.func = func;
-    this.result_reference = result_reference;
+    this.input_references = validation.valid_strings_array([...input_references]);
+    this.func = validation.valid_function(func);
+    this.result_reference = validation.valid_string(result_reference);
   }
 
   /**
@@ -44,7 +44,7 @@ export class ArithmeticCommand extends Command {
     try {
       return validation.valid_number(found);
     } catch {
-      throw new Error(`${name} has non numeric value`);
+      throw new Error(`${name} in the data_sheet has a non numeric value. Type is: ${found}`);
     }
   }
 }

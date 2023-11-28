@@ -22,9 +22,7 @@ const register_commands_to_factory_from_modules = async (factory, module_paths) 
  */
 const get_registered_factory = async (data_fetcher_function) => {
   const module_paths = await get_module_locations(data_fetcher_function);
-  console.log("AbstractFactory:", AbstractFactory)
   const factory = new AbstractFactory();
-  console.log(typeof factory)
   
   await register_commands_to_factory_from_modules(factory, module_paths);
   return factory;

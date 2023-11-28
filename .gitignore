@@ -1,2 +1,6 @@
 # Ignore npm packages
 node_modules/
+
+# Ignore Jest coverage
+coverage/
+coverage/lcov-report/
