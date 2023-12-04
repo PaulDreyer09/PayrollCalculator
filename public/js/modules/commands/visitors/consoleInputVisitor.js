@@ -2,15 +2,16 @@ import { Visitor } from "./visitor.js";
 import * as consoleInput from "../../utils/consoleInput.js";
 
 /**
- * The ConsoleInputVisitor collects DefineInputCommand's and can call get_input_values to request input via the console to 
- * get all the required input data and store it in input_values as an object with each property of the object having the same reference as the 
+ * The ConsoleInputVisitor collects DefineInputCommand's and can call get_input_values to request input via the console to
+ * get all the required input data and store it in input_values as an object with each property of the object having the same reference as the
  * DefineInputCommand reference string value for the required input data.
  */
 export class ConsoleInputVisitor extends Visitor {
-  constructor() {
+  constructor(reader_factory = consoleInput.create_console_reader) {
     super();
     this.define_input_commands = [];
     this.input_values = {};
+    this.reader_factory = reader_factory
   }
 
   /**
@@ -27,7 +28,7 @@ export class ConsoleInputVisitor extends Visitor {
     //Input is to be given from 1..x and will be validated as indexes as 0..x-1
     if (input_command.validation_type == "list") {
       const options = input_command.properties.options;
-      if(input >  options.length || input < 1 || input % 1 != 0){
+      if (input > options.length || input < 1 || input % 1 != 0) {
         console.error("The input value provided is invalid.");
         return { valid_data, validation_result };
       }
@@ -57,44 +58,46 @@ export class ConsoleInputVisitor extends Visitor {
    * @returns {string}
    */
   _get_prompt_message_string(command) {
-  const options_string = () => {
-    let values = [];
-    command.properties.options.forEach((option, index) => {
-      values.push(`${index + 1}: ${option.text}`);
-    });
+    const options_string = () => {
+      let values = [];
+      command.properties.options.forEach((option, index) => {
+        values.push(`${index + 1}: ${option.text}`);
+      });
 
-    return values.join("\n");
-  };
-  let message = `Please enter the Value for ${command.text}:`;
-  // Add min/max prompt
+      return values.join("\n");
+    };
+    let message = `Please enter the Value for ${command.text}:`;
+    // Add min/max prompt
 
-  if (typeof command.properties.min != "undefined") {
-    message += "\nMin: 0";
+    if (typeof command.properties.min != "undefined") {
+      message += "\nMin: 0";
+    }
+
+    if (typeof command.properties.max != "undefined") {
+      message += "\nMax: 0";
+    }
+
+    if (typeof command.properties.options != "undefined") {
+      message += `\nPlease select one of the following options by entering the corresponding number\n${options_string()} `;
+    }
+
+    return message + "\nInput: ";
   }
 
-  if (typeof command.properties.max != "undefined") {
-    message += "\nMax: 0";
-  }
-
-  if (typeof command.properties.options != "undefined") {
-    message += `\nPlease select one of the following options by entering the corresponding number\n${options_string()} `;
-  }
-
-  return message + '\nInput: ';
-}
-
-  async _read_console_input (command){
+  async _read_console_input(command) {
     let input;
     const prompt_message = this._get_prompt_message_string(command);
     //Gets input from the console depending on the required data type
     while (true) {
+      const reader = this.reader_factory();
+
       switch (command.data_type) {
         case "string": {
-          input = await consoleInput.read_string_input(prompt_message);            
+          input = await consoleInput.read_string_input(prompt_message, reader);
           break;
         }
         case "number": {
-          input = await consoleInput.read_number_input(prompt_message);
+          input = await consoleInput.read_number_input(prompt_message, reader);
           break;
         }
         default: {
@@ -111,7 +114,7 @@ export class ConsoleInputVisitor extends Visitor {
   }
 
   /**
-   * Request input from the console for each of the define_input_commands 
+   * Request input from the console for each of the define_input_commands
    * The user will be repeatedly prompted to give valid data if invalid data is provided.
    * @throws {Error} - Error will be thrown if the commands include an invalid data type that cant be requested with the console.
    */
@@ -123,7 +126,7 @@ export class ConsoleInputVisitor extends Visitor {
 
   /**
    * Collects and stores a DefineInputCommand in this.define_input_commands
-   * @param {DefineInputCommand} command 
+   * @param {DefineInputCommand} command
    */
   visit_define_input_command(command) {
     this.define_input_commands.push(command);

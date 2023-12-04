@@ -67,4 +67,8 @@ The application utilizes the following design patterns:
 ## Scripts
 
 - `npm run nodeEntry`: Run the Node prompt version of the application.
+<<<<<<< HEAD
 - `npm test`: Run tests using Jest and generate a coverage report.
+=======
+- `npm test`: Run tests using Jest and generate a coverage report.
+>>>>>>> f1e6359ada333d7c619238121a03883119b7243f
