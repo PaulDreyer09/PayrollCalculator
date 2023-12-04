@@ -68,11 +68,3 @@ The application utilizes the following design patterns:
 
 - `npm run nodeEntry`: Run the Node prompt version of the application.
 - `npm test`: Run tests using Jest and generate a coverage report.
-
-## Author
-
-[Your Name]
-
-## License
-
-This project is licensed under the ISC License - see the [LICENSE.md](LICENSE.md) file for details.

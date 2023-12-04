@@ -7,8 +7,10 @@
     <link rel="stylesheet" href="./css/styles.css">
     <script type="module" >
         import * as app from './js/main/app.js';
+        import * as ui from './js/ui/calculatorUI.js'
+        import { fetch_data } from "./js/modules/utils/webFetch.js";
 
-        await app.run();
+        await app.run_calculator("south_africa", fetch_data, ui.initialize_calculator);
     </script>
 </head>
 <body>

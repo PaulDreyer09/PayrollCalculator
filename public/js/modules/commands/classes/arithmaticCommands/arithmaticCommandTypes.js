@@ -10,6 +10,7 @@ import { ArithmeticCommand } from "./arithmaticCommand.js";
  */
 export class AddCommand extends ArithmeticCommand {
   constructor(result_reference, ...input_references) {
+    // console.log("Creating add command", result_reference, ...input_references)
     super(calc.sum, result_reference, ...input_references);
     this.name = "Add";
   }

@@ -7,6 +7,7 @@ import * as validation from "../utils/validation.js";
  * @returns {number} The sum of all provided numbers.
  */
 export const sum = (...numbers) => {
+  // console.log(...numbers)
   if (!numbers.length) {
     throw new Error("No input received for 'numbers' parameter");
   }
