@@ -24,8 +24,6 @@ export class IODefinitionCommand extends Command {
     this.command_name = command_name;
   }
 
-
-
   /**
    * Checks if the data type of the input_value is either number or string.
    * @throws - Error if not number or string
@@ -49,8 +47,8 @@ export class IODefinitionCommand extends Command {
     return true;
   }
 
+  //Test if the datasheet contains the defined data reference
   execute(data_sheet) {
-    //Test if the datasheet contains the defined data reference
     if (!(this.reference in data_sheet)) {
       throw new Error(`${this.command_name}: No expected data found with name: ${this.reference}`);
     }

@@ -9,10 +9,19 @@ export class ArithmeticCommand extends Command {
    */
   constructor(func, result_reference, ...input_references) {
     super();
+    //Validate input_references string list
+    try{
+      if(func.length > input_references.length){
+        throw new Error(`Not enough input references provided. Required: ${func.length}. Provided: ${input_references.length}`)
+      }
+      this.input_references = validation.valid_strings_array([...input_references]);
+    } catch(error) {
+      throw("Invalid list of values for input_references.", error.message)
+    }
+    
     this.name = null;
-    this.input_references = validation.valid_strings_array([...input_references]);
-    this.func = validation.valid_function(func);
     this.result_reference = validation.valid_string(result_reference);
+    this.func = validation.valid_function(func);
   }
 
   /**

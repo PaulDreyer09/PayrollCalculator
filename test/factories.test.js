@@ -157,7 +157,6 @@ describe("AbstractFactory Class Tests", () => {
 
     describe("Invalid cases.", () => {
       factory.register_class(Commands.AddCommand);
-      console.log("Factory: ", factory._registered_classes);
 
       //Invalid json_path inputs
       describe.each([undefined, null, 1, true, [], {}, () => {}])("Invalid json_path inputs", (json_path) => {

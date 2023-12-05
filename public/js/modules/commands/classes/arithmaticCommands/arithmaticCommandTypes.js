@@ -113,7 +113,7 @@ export class DeAnnualizeCommand extends ArithmeticCommand {
  */
 export class LesserOfCommand extends ArithmeticCommand {
   constructor(result_reference, ...input_references) {
-    super(calc.lesserOf, result_reference, ...input_references);
+    super(calc.lesser_of, result_reference, ...input_references);
     this.name = "Lesser Of";
   }
 }
